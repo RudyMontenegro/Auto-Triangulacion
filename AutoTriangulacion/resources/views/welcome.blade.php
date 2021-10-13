@@ -11,8 +11,15 @@
                     <div class="col-lg-5 col-md-6">
                         <h1 class="text-white">{{ __('Triangulacion de Llamadas') }}</h1>
                         <p class="text-lead text-light">
-                            {{ __('Use Black Dashboard theme to create a great project.') }}
+                            {{ __('¿Que es la triangulacion de llamadas?') }}
                         </p>
+                        <div>
+                            <p class="text-lead text-light">
+                                {{__('Permiten determinar la posición de un dispositivo de telefonía móvil,
+                                 lo hacen con un amplio margen de error que puede ir desde un par de metros hasta 
+                                 cientos de kilómetros.')}}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
