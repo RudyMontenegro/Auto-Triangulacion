@@ -23,6 +23,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home')->middleware('auth');
 
 Route::group(['middleware' => 'auth'], function () {
+		Route::get('create/XLSX', ['as' => 'pages.excel', 'uses' => 'VivaController@subirExcel']);
 		Route::get('icons', ['as' => 'pages.icons', 'uses' => 'PageController@icons']);
 		Route::get('maps', ['as' => 'pages.maps', 'uses' => 'PageController@maps']);
 		Route::get('notifications', ['as' => 'pages.notifications', 'uses' => 'PageController@notifications']);

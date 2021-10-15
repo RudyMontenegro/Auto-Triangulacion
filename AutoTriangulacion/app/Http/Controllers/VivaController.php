@@ -82,4 +82,9 @@ class VivaController extends Controller
     {
         //
     }
+
+    public function subirExcel()
+    {
+        return view('viva.excel');
+    }
 }
