@@ -37,8 +37,8 @@
                       <table class="table table-striped" id="tabla">
                           <thead style="background : rgb(78, 137, 225)">
                               <tr>
-                                  <th class="text-center">#</th>
-                                  <th class="text-center">Archivo</th>
+                                  <th class="text-center">w</th>
+                                  <th class="text-right">Archivo</th>
                                   <th class="text-center"></th>
                                   <th class="text-center">Eliminar</th>
                               </tr>
@@ -46,9 +46,9 @@
                           <tbody id="tabla3">
                               <span id="estadoBoton"></span>
                               <tr id="columna-0">
-                                  <th>
+                                  <td>
                                       
-                                  </th>
+                                  </td>
                                   <td>
                                    <div class="text-center">
                                     <label for="file-upload" class="subir">
