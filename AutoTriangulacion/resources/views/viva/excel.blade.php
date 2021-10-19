@@ -3,21 +3,21 @@
 @section('content')
   <style>
     .subir{
-      padding: 10px 50px;
-      background: #d752ff;
+      padding: 10px 60px;
+      background: #419EF9;
       color:#fff;
       border:0px solid #fff;
   }
    
   .subir:hover{
       color:#fff;
-      background: #d752ff;
+      background: #419EF9;
   }
   </style>
   <script>
     function cambiar(){
       var pdrs = document.getElementById('file-upload').files[0].name;
-      document.getElementById('info').innerHTML = pdrs;
+      document.getElementById('info').value = pdrs;
   }
   
   </script>
@@ -29,24 +29,17 @@
         <h4 class="card-title text-center">Subir Archivo Excel</h4>
       </div>
       <div class="card-body">
-        <div class="alert alert-info">
-          
-          <label for="file-upload" class="subir">
-            <i class="fas fa-cloud-upload-alt"></i> Subir archivo
-        </label>
-        <input id="file-upload" onchange='cambiar()' type="file" style='display: none;'/>
-        <div id="info"></div>
-        <input type="submit" value="Enviar"> 
-        </div>
+        
         <div class="row justify-content-center">
           <div class="col-md-10">
               <div class="card">
                    <form action="{{url('viva/create')}}" method="POST">
                       <table class="table table-striped" id="tabla">
-                          <thead style="background : rgb(225, 78, 202)">
+                          <thead style="background : rgb(78, 137, 225)">
                               <tr>
-                                  <th class="text-center">#</th>
+                                  <th class="text-center">w</th>
                                   <th class="text-center">Archivo</th>
+                                  <th class="text-center"></th>
                                   <th class="text-center">Eliminar</th>
                               </tr>
                           </thead> 
@@ -54,22 +47,27 @@
                               <span id="estadoBoton"></span>
                               <tr id="columna-0">
                                   <th>
-                                      <input class="form-control" name="numeroUsuario[]" id="numeroUsuario"  style="border-color: rgb(225, 78, 202)" onkeyup="existe()"  
-                                      list="codigo" >
-                                      <datalist id="codigo">
-                                      </datalist>
-                                      <span id="estadoCodigo"></span>
-                                      <span id="estadoCodigoI"></span>
+                                      
                                   </th>
                                   <td>
+                                   <div class="text-center">
                                     <label for="file-upload" class="subir">
-                                      <i class="fas fa-cloud-upload-alt"></i> Subir archivo
-                                  </label>
-                                  <input id="file-upload" onchange='cambiar()' type="file" style='display: none;'/>
+                                      <i class="fas fa-cloud-upload-alt"></i> Subir archivo</label>
+                                    <input id="file-upload" name="archivos[]" onchange='cambiar()' type="file" style='display: none;'/>
+                                   </div>
+                                  </td>
+                                  <td>
+                                    <div class="text-center">
+                                      <input type="text"  class="form-control"  
+                                      style="border-color: rgb(78, 137, 225) ; width: 300px;" id="info" ></input>
+                                      <span id="estadoNombre"></span>
+                                    </div>
                                   </td>
                                   <td class="eliminar" id="deletRow" name="deletRow">
-                                      <button class="btn btn-icon btn-danger"  type="button">
-                                          <span class="btn-inner--icon"><i class="ni ni-fat-remove"></i></span>
+                                      <div class="text-center">
+                                        <button class="btn btn-icon btn-danger"  type="button">
+                                        <i class="tim-icons icon-trash-simple"></i></button>
+                                      </div>
                                       </button>
                                   </td>
                               </tr>
