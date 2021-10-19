@@ -37,7 +37,7 @@
                       <table class="table table-striped" id="tabla">
                           <thead style="background : rgb(78, 137, 225)">
                               <tr>
-                                  <th class="text-center">w</th>
+                                  <th class="text-center">#</th>
                                   <th class="text-center">Archivo</th>
                                   <th class="text-center"></th>
                                   <th class="text-center">Eliminar</th>
