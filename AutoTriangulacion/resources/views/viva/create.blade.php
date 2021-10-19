@@ -10,52 +10,68 @@
     margin-left: auto;
     margin-right: auto;
     }
+    .card{
+        padding: 15px 50px;
+    }
 </style> 
       <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card">
-                 <form action="{{url('viva/create')}}" method="POST">
-                    <table class="table table-striped" id="tabla">
-                        <thead style="background : rgb(78, 137, 225">
-                            <tr>
-                                <th scope="col">Numero de Usuario</th>
-                                <th scope="col">Nombre</th>
-                                <th scope="col">C.I</th>
-                                <th scope="col">Eliminar</th>
-                            </tr>
-                        </thead> 
-                        <tbody id="tabla3">
-                            <span id="estadoBoton"></span>
-                            <tr id="columna-0">
-                                <th>
-                                    <input class="form-control" name="numeroUsuario[]" id="numeroUsuario"  style="border-color: rgb(78, 137, 225)"
-                                    value="{{old('nombreUsuario')}}" >
-                                    <datalist id="numeroUsuario">
-                                    </datalist>
-                                    <span id="estadoCodigo"></span>
-                                    <span id="estadoCodigoI"></span>
-                                </th>
-                                <td>
-                                    <input type="text"  class="form-control  {{$errors->has('nombre')?'is-invalid':'' }}" name="nombre[]" style="border-color: rgb(78, 137, 225)" 
-                                        id="nombre" value="{{old('nombre')}}">
-                                        <span id="estadoNombre"></span>
-                                </td>
-                                <td>
-                                    <input type="number" class="form-control  {{$errors->has('unidad')?'is-invalid':'' }}" name="ci[]" style="border-color: rgb(78, 137, 225)" 
-                                      id="ci" value="{{old('ci')}}"> 
-                                      <span id="estadoUnidad"></span>
-                                </td>
-                                <td class="eliminar" id="deletRow" name="deletRow">
-                                    <button class="btn btn-icon btn-danger"  type="button">
-                                        <span class="btn-inner--icon "><i class="ni ni-fat-remove"></i></span>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="card-header">
+                    <div class="card-title text-center">
+                        REGISTRO DE VIVA
+                    </div>
+                </div>
+                      <div class="card-body">
 
-                <button type="button" class="btn btn-secundary btn-lg btn-block" id="add" name="add">Añadir</button>
-    </form>
+                          <div class="row justify-content-center">
+                              <div class="col-md-10">
+                                  <div class="card">
+                                    <form action="{{url('viva/create')}}" method="POST">
+                                        <table class="table table-striped" id="tabla">
+                                            <thead style="background : rgb(78, 137, 225">
+                                                <tr>
+                                                    <th class="text-center">Numero de Usuario</th>
+                                                    <th class="text-center">Nombre</th>
+                                                    <th class="text-center">C.I</th>
+                                                    <th class="text-center">Eliminar</th>
+                                                </tr>
+                                            </thead> 
+                                            <tbody id="tabla3">
+                                                <span id="estadoBoton"></span>
+                                                <tr id="columna-0">
+                                                    <th>
+                                                        <input class="form-control" name="numeroUsuario[]" id="numeroUsuario"  style="border-color: rgb(78, 137, 225)"
+                                                            value="{{old('nombreUsuario')}}" >
+                                                        <datalist id="numeroUsuario">
+                                                    </th>
+                                                    <td>
+                                                        <input type="text"  class="form-control  {{$errors->has('nombre')?'is-invalid':'' }}" name="nombre[]" style="border-color: rgb(78, 137, 225)" 
+                                                            id="nombre" value="{{old('nombre')}}">
+                                                            <span id="estadoNombre"></span>
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" class="form-control  {{$errors->has('unidad')?'is-invalid':'' }}" name="ci[]" style="border-color: rgb(78, 137, 225)" 
+                                                        id="ci" value="{{old('ci')}}"> 
+                                                        <span id="estadoUnidad"></span>
+                                                    </td>
+                                                    <td class="eliminar" id="deletRow" name="deletRow">
+                                                        <button class="btn btn-icon btn-danger"  type="button">
+                                                            <span class="btn-inner--icon "><i class="ni ni-fat-remove"></i></span>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+            
+                                    <button type="button" class="btn btn-secundary btn-lg btn-block" id="add" name="add">Añadir</button>
+                                    </form>
+                                  </div>
+                              </div>
+                          </div>
+
+                      </div>
+                        
             </div>
             <a href="{{ url('viva/create') }}" class="btn btn-sm btn-danger">Cancelar</a>
             <a href="{{url('/create/XLSX')}}" class="btn btn-sm btn-secundary float-right">Siguiente</a>
