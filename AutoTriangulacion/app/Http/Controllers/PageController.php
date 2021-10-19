@@ -13,7 +13,10 @@ class PageController extends Controller
     {
         return view('pages.icons');
     }
-
+    public function carrier()
+    {
+        return view('pages.choiseCarrier');
+    }
     /**
      * Display maps page
      *
