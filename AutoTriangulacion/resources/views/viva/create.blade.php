@@ -56,9 +56,11 @@
                                                         <span id="estadoUnidad"></span>
                                                     </td>
                                                     <td class="eliminar" id="deletRow" name="deletRow">
-                                                        <button class="btn btn-icon btn-danger"  type="button">
-                                                            <span class="btn-inner--icon "><i class="ni ni-fat-remove"></i></span>
-                                                        </button>
+                                                        <div class="text-center">
+                                                            <button class="btn btn-icon btn-danger"  type="button">
+                                                                <span class="btn-inner--icon "><i class="tim-icons icon-trash-simple"></i></span>
+                                                            </button>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             </tbody>
