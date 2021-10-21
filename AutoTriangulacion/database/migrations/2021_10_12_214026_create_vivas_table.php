@@ -15,6 +15,10 @@ class CreateVivasTable extends Migration
     {
         Schema::create('vivas', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->bigInteger('numero_usuario')->nullable();
+            $table->string('nombre')->nullable();
+            $table->bigInteger('ci')->nullable();
+
             $table->timestamps();
         });
     }

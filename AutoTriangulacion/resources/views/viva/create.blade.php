@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => __('User Management'), 'pageSlug' => 'users']).
+@extends('layouts.app', ['page' => __('Icons'), 'pageSlug' => 'icons'])
 @section('content')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
@@ -7,27 +7,32 @@
         padding: 130px; 
     button{
         width: 150px;
-    margin-left: auto;
-    margin-right: auto;
+        margin-left: auto;
+        margin-right: auto;
     }
+    .menor {
+                color:#D60202;
+            }
     .card{
         padding: 15px 50px;
     }
+
 </style> 
       <div class="row justify-content-center">
         <div class="col-md-10">
-            <div class="card">
+            <div class="card" >
                 <div class="card-header">
                     <div class="card-title text-center">
-                        REGISTRO DE VIVA
+                        <h4>Registro de Viva</h4>
                     </div>
                 </div>
                       <div class="card-body">
 
                           <div class="row justify-content-center">
                               <div class="col-md-10">
-                                  <div class="card">
-                                    <form action="{{url('viva/create')}}" method="POST">
+                                  <div class="card" >
+                                    <form action="{{url('viva/register')}}" method="post" enctype="multipart/form-data">
+                                        {{ csrf_field()}}
                                         <table class="table table-striped" id="tabla">
                                             <thead style="background : rgb(78, 137, 225">
                                                 <tr>
@@ -38,23 +43,25 @@
                                                 </tr>
                                             </thead> 
                                             <tbody id="tabla3">
-                                                <span id="estadoBoton"></span>
+                                                 <span id="estadoBoton"></span>
                                                 <tr id="columna-0">
                                                     <th>
-                                                        <input class="form-control" name="numeroUsuario[]" id="numeroUsuario"  style="border-color: rgb(78, 137, 225)"
-                                                            value="{{old('nombreUsuario')}}" >
-                                                        <datalist id="numeroUsuario">
+                                                        <input type="integer" class="form-control text-white" name="numero_usuario" id="numero_usuario"  style="border-color: rgb(78, 137, 225)"
+                                                            value="{{old('nombre_usuario')}}" onkeyup="validarNumeroUsuario()" >
+                                                        <datalist id="numero_usuario">
+                                                        {!!  $errors->first('numero_usuario','<div class="invalid-feedback">:message</div>') !!}
                                                     </th>
+                                                    <span id="estadoNumeroUsuario"></span>
                                                     <td>
-                                                        <input type="text"  class="form-control  {{$errors->has('nombre')?'is-invalid':'' }}" name="nombre[]" style="border-color: rgb(78, 137, 225)" 
-                                                            id="nombre" value="{{old('nombre')}}">
-                                                            <span id="estadoNombre"></span>
+                                                        <input type="text"  class="form-control text-white  {{$errors->has('nombre')?'is-invalid':'' }}" name="nombre" style="border-color: rgb(78, 137, 225)" 
+                                                            id="nombre" value="{{old('nombre')}}" onkeyup="comprobarNombre()">
                                                     </td>
+                                                    <span id="estadoNombre"></span>
                                                     <td>
-                                                        <input type="number" class="form-control  {{$errors->has('unidad')?'is-invalid':'' }}" name="ci[]" style="border-color: rgb(78, 137, 225)" 
-                                                        id="ci" value="{{old('ci')}}"> 
-                                                        <span id="estadoUnidad"></span>
+                                                        <input type="int" class="form-control text-white ){{$errors->has('unidad')?'is-invalid':'' }}" name="ci" style="border-color: rgb(78, 137, 225)" 
+                                                        id="ci" value="{{old('ci')}}" onkeyup="validarCi()"> 
                                                     </td>
+                                                    <span id="estadoCi"></span>
                                                     <td class="eliminar" id="deletRow" name="deletRow">
                                                         <div class="text-center">
                                                             <button class="btn btn-icon btn-danger"  type="button">
@@ -75,7 +82,8 @@
                       </div>
                         
             </div>
-            <a href="{{ url('viva/create') }}" class="btn btn-sm btn-danger">Cancelar</a>
+            <a href="{{ url('home') }}" class="btn btn-sm btn-danger">Cancelar</a>
+         
             <a href="{{url('/create/XLSX')}}" class="btn btn-sm btn-secundary float-right">Siguiente</a>
         </div>
       </div>
@@ -84,20 +92,115 @@
     
 var bb = 0;
 $(function() {
+    console.log(existeValor("numero_usuario"));
         $("#add").on('click', function() {
-            $("#tabla tbody tr:eq(0)").clone().appendTo("#tabla").find('input').attr('readonly', true);
-            bb = bb + 1;
-            limpiarCampos();
+            if(!existeValor("numero_usuario") && !existeValor("nombre") && !existeValor("ci"))
+            {
+                bb = bb + 1;
+                $("#tabla tbody tr:eq(0)").clone().appendTo("#tabla").find('input')
+                .attr('readonly', true);
+                bb = bb + 1;
+                limpiarCampos();
+                $("#stateRow").html("<span  class='menor'><h5 class='menor'></h5></span>");
+            } else {
+                $("#stateRow").html("<h5 class='menor'>Revise todos los campos </h5>");
+                vacio("numero_usuario");
+                vacio("nombre");
+                vacio("ci");
+            }
+            
         });
         $(document).on("click", ".eliminar", function() {
             if (bb > 0) {
                 var parent = $(this).parents().get(0);
                 $(parent).remove();
                 bb = bb - 1;
+                limpiarCampos();
             }
         });
    
 });
+
+function limpiarCampos() {
+    $("#numero_usuario").val('');
+    $("#nombre").val('');
+    $("#ci").val('');
+}
+
+function existeValor($dato) {
+        var boolean = false;
+        var aux = document.getElementById($dato).value;
+        if (aux == "") {
+            boolean = true;
+        }
+        return boolean;
+    }
+    
+    function vacio($valor) {
+        var dato = document.getElementById($valor).value;
+        var prueba = document.getElementById($valor);
+        if (dato == "" ) {
+            prueba.style.borderColor = 'red';
+        } else {
+            return dato;
+        }
+    }
+
+    function comprobarNombre(){
+                
+        if($("#nombre").val() == ""){
+             $("#estadoNombre").html("<span  class='menor'><h5 class='menor'> </h5></span>");
+            }else{
+                var re = new RegExp("^[a-zA-Z ]+$");
+             if(!re.test($("#nombre").val())){
+                 $("#estadoNombre").html("<span  class='menor'><h5 class='menor'>Solo se acepta letras [A-Z]</h5></span>");
+                }else{
+                 $("#estadoNombre").html("<span  class='menor'><h5 class='menor'> </h5></span>");
+             }
+        }
+    }
+    function validarNumeroUsuario() {
+        var re = new RegExp("^[+-]?([0-9]+([.|,][0-9]*)?|[.][0-9]+)$");
+        
+        if($("#numero_usuario").val() == ""){
+            $("#estadoNumeroUsuario").html("<span  class='menor'><h5 class='menor'> </h5></span>");
+        }else{
+            if($("#numero_usuario").val() <= 0){
+                $("#estadoNumeroUsuario").html("<span  class='menor'><h5 class='menor'>Numero debe ser mayor a 0</h5></span>");
+            }else{
+                if(!re.test($("#numero_usuario").val()) || $("#numero_usuario").val() == 'e' ||  $("#numero_usuario").val() == '-'){
+                    $("#estadoNumeroUsuario").html("<span  class='menor'><h5 class='menor'>Numero incorrecto</h5></span>");
+                }else{
+                    prueba.style.borderColor = '#cad1d7';
+                    
+                    $("#estadoNumeroUsuario").html("<span  class='menor'><h5 class='menor'> </h5></span>");
+                    
+                }
+            }
+        }
+    }
+    function validarCi() {
+        var re = new RegExp("^[+-]?([0-9]+([.|,][0-9]*)?|[.][0-9]+)$");
+        
+        if($("#ci").val() == ""){
+            $("#estadoCi").html("<span  class='menor'><h5 class='menor'> </h5></span>");
+        }else{
+            if($("#ci").val() <= 0){
+                $("#estadoCi").html("<span  class='menor'><h5 class='menor'>Numero debe ser mayor a 0</h5></span>");
+            }else{
+                if(!re.test($("#ci").val()) || $("#ci").val() == 'e' ||  $("#ci").val() == '-'){
+                    $("#estadoCi").html("<span  class='menor'><h5 class='menor'>Numero incorrecto</h5></span>");
+                }else{
+                    prueba.style.borderColor = '#cad1d7';
+                    
+                    $("#estadoCi").html("<span  class='menor'><h5 class='menor'> </h5></span>");
+                    
+                }
+            }
+        }
+    }
+    
+
 </script>
 
    
