@@ -16,9 +16,11 @@
     <div class="row">
     <div class="col-lg-4">
         <button type="button" class="btn btn-default">
-            <h3 class="card-title"><i class="tim-icons icon-send text-success"></i>VIVA</h3>
+            <a href="{{url('/create')}}">
+                <h3 class="card-title"><i class="tim-icons icon-send text-success"></i>VIVA</h3>
             <img src="{{ asset('images/carrierLogo/viva.png') }}" width="300" height="250"
                 class="rounded mx-auto d-block" alt="Responsive image">
+            </a>
         </button>
     </div>
     <div class="col-lg-4">
