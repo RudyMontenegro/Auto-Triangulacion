@@ -1,6 +1,8 @@
 @extends('layouts.app', ['page' => __('Icons'), 'pageSlug' => 'icons'])
 
 @section('content')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <style>
     .subir{
       padding: 10px 60px;
@@ -37,7 +39,7 @@
                       <table class="table table-striped" id="tabla">
                           <thead style="background : rgb(78, 137, 225)">
                               <tr>
-                                  <th class="text-center">w</th>
+                                  <th class="text-center">#</th>
                                   <th class="text-right">Archivo</th>
                                   <th class="text-center"></th>
                                   <th class="text-center">Eliminar</th>
@@ -47,7 +49,9 @@
                               <span id="estadoBoton"></span>
                               <tr id="columna-0">
                                   <td>
-                                      
+                                   <div class="text-center">
+                                    <label for="uno" id="count" class="text-center text-white" >1</label>
+                                   </div>
                                   </td>
                                   <td>
                                    <div class="text-center">
@@ -58,9 +62,8 @@
                                   </td>
                                   <td>
                                     <div class="text-center">
-                                      <input type="text"  class="form-control"  
+                                      <input type="text"  class="form-control text-white"  disabled
                                       style="border-color: rgb(78, 137, 225) ; width: 300px;" id="info" ></input>
-                                      <span id="estadoNombre"></span>
                                     </div>
                                   </td>
                                   <td class="eliminar" id="deletRow" name="deletRow">
@@ -70,18 +73,73 @@
                                       </div>
                                       </button>
                                   </td>
+
                               </tr>
                           </tbody>
                       </table>
-  
-                  <button type="button" class="btn btn-success btn-lg btn-block" id="adicional" name="adicional">Añadir</button>
+                      <div class="text-center">
+                        <span id="mensaje"></span>
+                      </div>
+                      <button type="button" class="btn btn-secundary btn-lg btn-block" id="add" name="add">Añadir</button>
       </form>
               </div>
           </div>
         </div>
       </div>
     </div>
+    <a href="{{ url('home') }}" class="btn btn-sm btn-danger">Cancelar</a>
+            <a href="#" class="btn btn-sm btn-secundary float-right">Siguiente</a>
 </div>
 
   </div>
+
+  <script>
+    
+    var bb = 0;
+    var go = 1;
+    $(function() {
+      
+            $("#add").on('click', function() {
+              if(!validar()){
+                $("#mensaje").html("<span class='text-white'></span>");
+                  $("#tabla tbody tr:eq(0)").clone().appendTo("#tabla").find('input').attr('readonly', true);
+                                  bb = bb + 1;
+                                  go = go + 1;
+                                  $("#count").html("<label for='uno' id='count"+go+"' class='text-center text-white'>"+go+"</label>");
+                                  limpiarCampos();
+              }else{
+                $("#mensaje").html("<span class='text-white'>Suba un archivo</span>");
+              }
+                
+            });
+            $(document).on("click", ".eliminar", function() {
+                if (bb > 0) {
+                    var parent = $(this).parents().get(0);
+                    $(parent).remove();
+                    bb = bb - 1;
+                    go = go-1;
+                    $("#count").html("<label for='uno' id='count"+go+"' class='text-center text-white'>"+go+"</label>");
+                }else{
+                  document.getElementById('info').value = "";
+                  $("#count").html("<label for='uno' id='count"+go+"' class='text-center text-white'>"+go+"</label>");
+                }
+            });
+       
+    });
+
+    function limpiarCampos(){
+      $("#info").val('');
+    }
+
+    function validar(){
+      var aux = false;
+      
+      if(document.getElementById('info').value == ""){
+       
+          aux = true;
+      
+      }
+      return aux;
+    }
+    </script>
 @endsection

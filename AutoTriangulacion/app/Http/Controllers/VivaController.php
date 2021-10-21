@@ -83,8 +83,22 @@ class VivaController extends Controller
         //
     }
 
-    public function subirExcel()
+    public function subirExcel(Request $request)
     {
+        
+        $producto = new viva();
+
+        if($request->hasfile('foto')){
+    
+            $file =$request->foto;
+            
+            $producto['ruta_foto']=$request->file('foto')->store('fotos','public');
+            
+            //$file->move(public_path().'/firmas',$file->getClientOriginalName());
+            $producto->foto=$file->getClientOriginalName();
+        }
+
+        $producto->save();
         return view('viva.excel');
     }
 }
