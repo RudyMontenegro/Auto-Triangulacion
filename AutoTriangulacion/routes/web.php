@@ -40,7 +40,8 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'ProfileController@password']);
 });
 Route::group(['middleware' => 'auth'], function () {
-	Route::get('create/XLSX', ['as' => 'pages.excel', 'uses' => 'VivaController@subirExcel']);
+	Route::get('create/XLSX', ['as' => 'pages.excel', 'uses' => 'VivaController@excel']);
+	Route::post('create/XLSX', ['as' => 'pages.excel', 'uses' => 'VivaController@subirExcel']);
 	Route::get('carrier', ['as' => 'pages.choiseCarrier', 'uses' => 'PageController@carrier']);
 	Route::get('create',['as' => 'viva.create','uses' => 'VivaController@create']);
 	Route::post('viva/register',['as' => 'viva.store','uses' => 'VivaController@store']);

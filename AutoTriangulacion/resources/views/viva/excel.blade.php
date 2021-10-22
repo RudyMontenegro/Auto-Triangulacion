@@ -35,7 +35,8 @@
         <div class="row justify-content-center">
           <div class="col-md-10">
               <div class="card">
-                   <form action="{{url('viva/create')}}" method="POST">
+                   <form action="{{url('create/XLSX')}}" method="POST" enctype="multipart/form-data">
+                    {{ csrf_field()}}
                       <table class="table table-striped" id="tabla">
                           <thead style="background : rgb(78, 137, 225)">
                               <tr>
@@ -81,16 +82,16 @@
                         <span id="mensaje"></span>
                       </div>
                       <button type="button" class="btn btn-secundary btn-lg btn-block" id="add" name="add">Añadir</button>
-      </form>
+      
               </div>
           </div>
         </div>
       </div>
     </div>
     <a href="{{ url('home') }}" class="btn btn-sm btn-danger">Cancelar</a>
-            <a href="#" class="btn btn-sm btn-secundary float-right">Siguiente</a>
+    <button type="submit"class="btn btn-sm btn-secundary float-right">Siguiente</button>
 </div>
-
+</form>
   </div>
 
   <script>

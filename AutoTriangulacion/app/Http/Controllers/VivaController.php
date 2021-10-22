@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\excelModel ;
 use App\viva;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel as Ex;
 
 class VivaController extends Controller
 {
@@ -91,22 +93,39 @@ class VivaController extends Controller
         //
     }
 
+    public function excel(viva $viva)
+    {
+        return view('viva.excel');
+    }
+
     public function subirExcel(Request $request)
     {
         
-        $producto = new viva();
+        if ($request->hasFile('archivos')){
 
-        if($request->hasfile('foto')){
-    
-            $file =$request->foto;
-            
-            $producto['ruta_foto']=$request->file('foto')->store('fotos','public');
-            
-            //$file->move(public_path().'/firmas',$file->getClientOriginalName());
-            $producto->foto=$file->getClientOriginalName();
+            $archivos = request('archivos');
+            for ($i=0; $i < sizeOf($archivos); $i++) { 
+                $file = $request->file('archivos');
+                Ex::import(new excelModel,$file[$i]);
+            }
         }
+        /*
+        if($request->file('archivos') ){
+            $archivos = request('archivos');
+            for ($i=0; $i < sizeOf($archivos); $i++) { 
 
-        $producto->save();
-        return view('viva.excel');
+                $excel = new excel();
+
+                $excel['ruta_excel']=$archivos[$i]->store('excels','public');
+                
+                $excel -> save();
+
+            }
+        }
+       
+        */
+
+
+        return view('pages.icons');
     }
 }
