@@ -46,20 +46,20 @@
                                                  <span id="estadoBoton"></span>
                                                 <tr id="columna-0">
                                                     <th>
-                                                        <input type="integer" class="form-control text-white" name="numero_usuario" id="numero_usuario"  style="border-color: rgb(78, 137, 225)"
-                                                            value="{{old('nombre_usuario')}}" onkeyup="validarNumeroUsuario()" >
+                                                        <input type="integer" class="form-control text-white" name="numero_usuario[]" id="numero_usuario"  style="border-color: rgb(78, 137, 225)"
+                                                            value="{{old('nombre_usuario')}}" onkeyup="validarNumeroUsuario()" autocomplete="off">
                                                         <datalist id="numero_usuario">
                                                         {!!  $errors->first('numero_usuario','<div class="invalid-feedback">:message</div>') !!}
                                                     </th>
                                                     <span id="estadoNumeroUsuario"></span>
                                                     <td>
-                                                        <input type="text"  class="form-control text-white  {{$errors->has('nombre')?'is-invalid':'' }}" name="nombre" style="border-color: rgb(78, 137, 225)" 
-                                                            id="nombre" value="{{old('nombre')}}" onkeyup="comprobarNombre()">
+                                                        <input type="text"  class="form-control text-white  {{$errors->has('nombre')?'is-invalid':'' }}" name="nombre[]" style="border-color: rgb(78, 137, 225)" 
+                                                            id="nombre" value="{{old('nombre')}}" onkeyup="comprobarNombre()" autocomplete="off">
                                                     </td>
                                                     <span id="estadoNombre"></span>
                                                     <td>
-                                                        <input type="int" class="form-control text-white ){{$errors->has('unidad')?'is-invalid':'' }}" name="ci" style="border-color: rgb(78, 137, 225)" 
-                                                        id="ci" value="{{old('ci')}}" onkeyup="validarCi()"> 
+                                                        <input type="int" class="form-control text-white ){{$errors->has('unidad')?'is-invalid':'' }}" name="ci[]" style="border-color: rgb(78, 137, 225)" 
+                                                        id="ci" value="{{old('ci')}}" onkeyup="validarCi()" autocomplete="off"> 
                                                     </td>
                                                     <span id="estadoCi"></span>
                                                     <td class="eliminar" id="deletRow" name="deletRow">
@@ -74,7 +74,7 @@
                                         </table>
             
                                     <button type="button" class="btn btn-secundary btn-lg btn-block" id="add" name="add">Añadir</button>
-                                    </form>
+                                    
                                   </div>
                               </div>
                           </div>
@@ -84,8 +84,9 @@
             </div>
             <a href="{{ url('home') }}" class="btn btn-sm btn-danger">Cancelar</a>
          
-            <a href="{{url('/create/XLSX')}}" class="btn btn-sm btn-secundary float-right">Siguiente</a>
-        </div>
+            <button type="submit" class="btn btn-sm btn-secundary float-right"s>Siguiente</button>
+        </form>
+    </div>
       </div>
 
 <script>
