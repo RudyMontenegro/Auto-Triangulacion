@@ -13,6 +13,10 @@ class PageController extends Controller
     {
         return view('pages.icons');
     }
+    public function example()
+    {
+        return view('pages.exampleConvert.entelExample');
+    }
     public function carrier()
     {
         return view('pages.choiseCarrier');
