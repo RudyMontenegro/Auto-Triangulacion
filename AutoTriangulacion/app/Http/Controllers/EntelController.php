@@ -24,7 +24,7 @@ class EntelController extends Controller
      */
     public function create()
     {
-        //
+        return view('entel.create');
     }
 
     /**
@@ -35,7 +35,21 @@ class EntelController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if($request -> input('numero_usuario') && $request -> input('nombre') && $request -> input('ci')){
+            $numero_usuario = request('numero_usuario');
+            $nombre = request('nombre');
+            $ci = request('ci');
+
+            for($i=0; $i < sizeof($nombre); $i++){
+                $viva = new entel();
+                $viva -> numero_usuario = $numero_usuario[$i];
+                $viva -> nombre = $nombre[$i];
+                $viva -> ci = $ci[$i];
+
+                $viva -> save();
+            }
+        }
+        return view('ente.excel');
     }
 
     /**

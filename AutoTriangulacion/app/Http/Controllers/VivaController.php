@@ -37,15 +37,21 @@ class VivaController extends Controller
      */
     public function store(Request $request)
     {
-        $viva = new viva();
+        if($request -> input('numero_usuario') && $request -> input('nombre') && $request -> input('ci')){
+            $numero_usuario = request('numero_usuario');
+            $nombre = request('nombre');
+            $ci = request('ci');
 
-        $viva -> numero_usuario = request('numero_usuario');
-        $viva -> nombre = request('nombre');
-        $viva -> ci = request('ci');
+            for($i=0; $i < sizeof($nombre); $i++){
+                $viva = new viva();
+                $viva -> numero_usuario = $numero_usuario[$i];
+                $viva -> nombre = $nombre[$i];
+                $viva -> ci = $ci[$i];
 
-        //dd($viva);
-
-        $viva -> save();
+                $viva -> save();
+            }
+        }
+        return view('viva.excel');
     }
 
     /**
