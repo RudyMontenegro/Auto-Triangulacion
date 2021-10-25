@@ -100,15 +100,24 @@ class VivaController extends Controller
 
     public function subirExcel(Request $request)
     {
-        
-        if ($request->hasFile('archivos')){
+        try {
+            if ($request->hasFile('archivos')){
 
             $archivos = request('archivos');
+            
             for ($i=0; $i < sizeOf($archivos); $i++) { 
                 $file = $request->file('archivos');
                 Ex::import(new excelModel,$file[$i]);
             }
+
+            return view('pages.icons');
         }
+        } catch (\Throwable $th) {
+
+            return view('errors.alerta',compact('th'));
+        }
+        
+        
         /*
         if($request->file('archivos') ){
             $archivos = request('archivos');
@@ -126,6 +135,6 @@ class VivaController extends Controller
         */
 
 
-        return view('pages.icons');
+        
     }
 }
