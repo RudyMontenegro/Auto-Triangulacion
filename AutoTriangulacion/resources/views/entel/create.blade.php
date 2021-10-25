@@ -23,7 +23,7 @@
             <div class="card" >
                 <div class="card-header">
                     <div class="card-title text-center">
-                        <h4>Registro de Viva</h4>
+                        <h4>Registro de Entel</h4>
                     </div>
                 </div>
                       <div class="card-body">
@@ -31,7 +31,7 @@
                           <div class="row justify-content-center">
                               <div class="col-md-10">
                                   <div class="card" >
-                                    <form action="{{url('viva/register')}}" method="post" enctype="multipart/form-data">
+                                    <form action="{{url('entel/register')}}" method="post" enctype="multipart/form-data">
                                         {{ csrf_field()}}
                                         <table class="table table-striped" id="tabla">
                                             <thead style="background : rgb(78, 137, 225">

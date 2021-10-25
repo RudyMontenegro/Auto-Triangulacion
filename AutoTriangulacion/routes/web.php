@@ -47,4 +47,9 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('viva/register',['as' => 'viva.store','uses' => 'VivaController@store']);
 });
 
+Route::group(['middleware' => 'auth'], function () {
+	Route::get('entel/create',['as' => 'entel.create','uses' => 'EntelController@create']);
+	Route::post('entel/register',['as' => 'entel.store','uses' => 'EntelController@store']);
+});
+
 

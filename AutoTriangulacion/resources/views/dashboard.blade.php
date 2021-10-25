@@ -32,6 +32,7 @@
     </div>
     <div class="col-lg-4">
         <button type="button" class="btn btn-default">
+            <a href="{{url('/entel/create')}}">
             <h3 class="card-title"><i class="tim-icons icon-send text-danger"></i>ENTEL</h3>
             <img src="{{ asset('images/carrierLogo/entel.jpg') }}" width="300" height="250"
                 class="rounded mx-auto d-block" alt="Responsive image">

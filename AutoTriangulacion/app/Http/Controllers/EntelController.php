@@ -24,7 +24,7 @@ class EntelController extends Controller
      */
     public function create()
     {
-        //
+        return view('entel.create');
     }
 
     /**
