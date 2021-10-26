@@ -41,11 +41,11 @@ Route::group(['middleware' => 'auth'], function () {
 });
 Route::group(['middleware' => 'auth'], function () {
 	Route::get('example/entel', ['as' => 'pages.exampleConvert.entelExample', 'uses' => 'PageController@example']);
-	Route::get('create/XLSX', ['as' => 'pages.excel', 'uses' => 'VivaController@excel']);
-	Route::post('create/XLSX', ['as' => 'pages.excel', 'uses' => 'VivaController@subirExcel']);
+	Route::get('viva/register/XLSX', ['as' => 'pages.excel', 'uses' => 'VivaController@excel']);
+	Route::post('viva/register/XLSX', ['as' => 'pages.excel', 'uses' => 'VivaController@subirExcel']);
 	Route::get('carrier', ['as' => 'pages.choiseCarrier', 'uses' => 'PageController@carrier']);
-	Route::get('viva/create',['as' => 'viva.create','uses' => 'VivaController@create']);
-	Route::post('viva/register',['as' => 'viva.store','uses' => 'VivaController@store']);
+	Route::get('viva/register',['as' => 'viva.create','uses' => 'VivaController@create']);
+	Route::post('viva/register/XLSX',['as' => 'viva.store','uses' => 'VivaController@store']);
 });
 
 Route::group(['middleware' => 'auth'], function () {

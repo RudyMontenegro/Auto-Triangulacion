@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\excelModel ;
 use App\viva;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel as Ex;
 
 class VivaController extends Controller
@@ -110,10 +111,17 @@ class VivaController extends Controller
             if ($request->hasFile('archivos')){
 
             $archivos = request('archivos');
-            
+            $numero = request('numero');
+            $file = $request->file('archivos');
             for ($i=0; $i < sizeOf($archivos); $i++) { 
-                $file = $request->file('archivos');
+                
                 Ex::import(new excelModel,$file[$i]);
+
+                DB::table('excels')
+                ->where('identificador', null)
+                ->update(['identificador' => $numero[$i]]);
+                
+                
             }
 
             return view('pages.icons');

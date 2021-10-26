@@ -5,7 +5,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <style>
     .subir{
-      padding: 10px 60px;
+      padding: 10px 30px;
       background: #419EF9;
       color:#fff;
       border:0px solid #fff;
@@ -35,14 +35,15 @@
         <div class="row justify-content-center">
           <div class="col-md-10">
               <div class="card">
-                   <form action="{{url('create/XLSX')}}" method="POST" enctype="multipart/form-data">
+                   <form action="{{url('viva/register/XLSX')}}" method="POST" enctype="multipart/form-data">
                     {{ csrf_field()}}
-                      <table class="table table-striped" id="tabla">
+                      <table class="table table-striped table-responsive" id="tabla">
                           <thead style="background : rgb(78, 137, 225)">
                               <tr>
                                   <th class="text-center">#</th>
                                   <th class="text-right">Archivo</th>
                                   <th class="text-center"></th>
+                                  <th class="text-center">Numero</th>
                                   <th class="text-center">Eliminar</th>
                               </tr>
                           </thead> 
@@ -65,6 +66,12 @@
                                     <div class="text-center">
                                       <input type="text"  class="form-control text-white"  disabled
                                       style="border-color: rgb(78, 137, 225) ; width: 300px;" id="info" ></input>
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <div class="text-center">
+                                      <input type="integer"  class="form-control text-white"   id="numero" name="numero[]"
+                                      style="border-color: rgb(78, 137, 225) ; width: 100px;" ></input>
                                     </div>
                                   </td>
                                   <td class="eliminar" id="deletRow" name="deletRow">
@@ -101,7 +108,7 @@
     $(function() {
       
             $("#add").on('click', function() {
-              if(!validar()){
+              if(!validar('info') && !validar('numero')){
                 $("#mensaje").html("<span class='text-white'></span>");
                   $("#tabla tbody tr:eq(0)").clone().appendTo("#tabla").find('input').attr('readonly', true);
                                   bb = bb + 1;
@@ -109,7 +116,16 @@
                                   $("#count").html("<label for='uno' id='count"+go+"' class='text-center text-white'>"+go+"</label>");
                                   limpiarCampos();
               }else{
-                $("#mensaje").html("<span class='text-white'>Suba un archivo</span>");
+                if(validar('info')){
+                  $("#mensaje").html("<span class='text-white'>Suba un archivo</span>");
+                }else{
+                  if(validar('numero')){
+                    $("#mensaje").html("<span class='text-white'>Registre numero</span>")
+                  }else{
+                    $("#mensaje").html("<span class='text-white'></span>");
+                  }
+                }
+                
               }
                 
             });
@@ -130,12 +146,13 @@
 
     function limpiarCampos(){
       $("#info").val('');
+      $("#numero").val('');
     }
 
-    function validar(){
+    function validar($variable){
       var aux = false;
       
-      if(document.getElementById('info').value == ""){
+      if(document.getElementById($variable).value == "" ){
        
           aux = true;
       

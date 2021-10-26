@@ -15,8 +15,16 @@ class CreateExcelsTable extends Migration
     {
         Schema::create('excels', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('llamada')->nullable();
             $table->string('numeroA')->nullable();
+            $table->string('radio_baseA')->nullable();
+            $table->string('coordenadaA')->nullable();
             $table->string('numeroB')->nullable();
+            $table->string('radio_baseB')->nullable();
+            $table->string('coordenadaB')->nullable();
+            $table->string('fecha')->nullable();
+            $table->string('tiempo')->nullable();
+            $table->string('identificador')->nullable();
             $table->timestamps();
         });
     }

@@ -31,7 +31,7 @@
                           <div class="row justify-content-center">
                               <div class="col-md-10">
                                   <div class="card" >
-                                    <form action="{{url('viva/register')}}" method="post" enctype="multipart/form-data">
+                                    <form action="{{url('viva/register/XLSX')}}" method="post" enctype="multipart/form-data">
                                         {{ csrf_field()}}
                                         <table class="table table-striped" id="tabla">
                                             <thead style="background : rgb(78, 137, 225">
