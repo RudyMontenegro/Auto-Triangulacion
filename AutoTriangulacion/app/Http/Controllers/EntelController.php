@@ -102,7 +102,7 @@ class EntelController extends Controller
 
     public function excel(entel $viva)
     {
-        return view('viva.excel');
+        return view('entel.excel');
     }
 
     public function subirExcel(Request $request)
