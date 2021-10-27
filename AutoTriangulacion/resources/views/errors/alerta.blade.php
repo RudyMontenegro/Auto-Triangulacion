@@ -9,7 +9,6 @@
             <h3 class="card-title text-center" style="color: #a6ccff">¡¡¡ALERTA!!!</h3>
           </div>
           <div class="card-body">
-            {{$th}}
             <div class="row justify-content-center">
               <div class="col-md-10">
                   <div class="card">

@@ -63,7 +63,7 @@ class EntelController extends Controller
      */
     public function show(entel $entel)
     {
-        //
+        //return view('entel.view');
     }
 
     /**
@@ -124,7 +124,7 @@ class EntelController extends Controller
                 
             }
 
-            return view('pages.icons');
+            return view('entel.view');
         }
         } catch (\Throwable $th) {
 

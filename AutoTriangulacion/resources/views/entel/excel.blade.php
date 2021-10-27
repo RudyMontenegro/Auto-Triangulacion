@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => __('Icons'), 'pageSlug' => 'icons'])
+@extends('layouts.app', ['page' => __('ENTEL'), 'pageSlug' => 'icons'])
 
 @section('content')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -35,7 +35,7 @@
         <div class="row justify-content-center">
           <div class="col-md-10">
               <div class="card">
-                   <form action="{{url('viva/register/XLSX')}}" method="POST" enctype="multipart/form-data">
+                   <form action="{{url('entel/register/XLSX/view')}}" method="POST" enctype="multipart/form-data">
                     {{ csrf_field()}}
                       <table class="table table-striped" id="tabla">
                           <thead style="background : rgb(78, 137, 225)">
@@ -64,13 +64,13 @@
                                   </td>
                                   <td>
                                     <div class="text-center">
-                                      <input type="text"  class="form-control text-white"  disabled
+                                      <input type="text"  class="form-control text-white required"  disabled
                                       style="border-color: rgb(78, 137, 225) ;" id="info" ></input>
                                     </div>
                                   </td>
                                   <td>
                                     <div class="text-center">
-                                      <input type="integer"  class="form-control text-white"   id="numero" name="numero[]"
+                                      <input type="integer"  class="form-control text-white required"   id="numero" name="numero[]"
                                       style="border-color: rgb(78, 137, 225) ;" ></input>
                                     </div>
                                   </td>
@@ -96,7 +96,7 @@
       </div>
     </div>
     <a href="{{ url('home') }}" class="btn btn-sm btn-danger">Cancelar</a>
-    <button type="submit"class="btn btn-sm btn-secundary float-right">Siguiente</button>
+    <button type="submit"class="btn btn-sm btn-secundary float-right" id="sig" name="sig" disabled>Siguiente</button>
 </div>
 </form>
   </div>
@@ -140,7 +140,29 @@
                   document.getElementById('info').value = "";
                   $("#count").html("<label for='uno' id='count"+go+"' class='text-center text-white'>"+go+"</label>");
                 }
+
             });
+
+
+            $(document).on('change keyup', '.required', function(e){
+              let Disabled = true;
+               $(".required").each(function() {
+                 let value = this.value
+                 if ((value)&&(value.trim() !=''))
+                     {
+                       Disabled = false
+                     }else{
+                       Disabled = true
+                       return false
+                     }
+               });
+              
+              if(Disabled){
+                   $('#sig').prop("disabled", true);
+                 }else{
+                   $('#sig').prop("disabled", false);
+                 }
+            })
        
     });
 
