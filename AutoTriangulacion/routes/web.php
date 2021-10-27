@@ -49,8 +49,10 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 Route::group(['middleware' => 'auth'], function () {
-	Route::get('entel/create',['as' => 'entel.create','uses' => 'EntelController@create']);
-	Route::post('entel/register',['as' => 'entel.store','uses' => 'EntelController@store']);
+	Route::get('entel/register',['as' => 'entel.create','uses' => 'EntelController@create']);
+	Route::post('entel/register/XLSX',['as' => 'entel.store','uses' => 'EntelController@store']);
+	Route::get('entel/register/XLSX', ['as' => 'entel.excel', 'uses' => 'EntelController@excel']);
+	Route::post('entel/register/XLSX', ['as' => 'entel.excel', 'uses' => 'EntelController@subirExcel']);
 });
 
 
