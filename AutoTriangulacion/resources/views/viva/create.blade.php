@@ -45,23 +45,20 @@
                                             <tbody id="tabla3">
                                                  <span id="estadoBoton"></span>
                                                 <tr id="columna-0">
-                                                    <th>
+                                                    <td>
                                                         <input type="integer" class="form-control text-white required" name="numero_usuario[]" id="numero_usuario"  style="border-color: rgb(78, 137, 225)"
                                                             value="{{old('nombre_usuario')}}" onkeyup="validarNumeroUsuario()" autocomplete="off">
                                                         <datalist id="numero_usuario">
                                                         {!!  $errors->first('numero_usuario','<div class="invalid-feedback">:message</div>') !!}
-                                                    </th>
-                                                    <span id="estadoNumeroUsuario"></span>
+                                                    </td>
                                                     <td>
                                                         <input type="text"  class="form-control text-white  {{$errors->has('nombre')?'is-invalid':'' }} required" name="nombre[]" style="border-color: rgb(78, 137, 225)" 
                                                             id="nombre" value="{{old('nombre')}}" onkeyup="comprobarNombre()" autocomplete="off">
                                                     </td>
-                                                    <span id="estadoNombre"></span>
                                                     <td>
                                                         <input type="int" class="form-control text-white ){{$errors->has('unidad')?'is-invalid':'' }} required" name="ci[]" style="border-color: rgb(78, 137, 225)" 
                                                         id="ci" value="{{old('ci')}}" onkeyup="validarCi()" autocomplete="off"> 
                                                     </td>
-                                                    <span id="estadoCi"></span>
                                                     <td class="eliminar" id="deletRow" name="deletRow">
                                                         <div class="text-center">
                                                             <button class="btn btn-icon btn-danger"  type="button">
@@ -71,7 +68,10 @@
                                                     </td>
                                                 </tr>
                                             </tbody>
-                                        </table>
+                                        </table> 
+                                        <span id="estadoNumeroUsuario"></span>
+                                        <span id="estadoNombre"></span>
+                                        <span id="estadoCi"></span>
             
                                     <button type="button" class="btn btn-secundary btn-lg btn-block" id="add" name="add">Añadir</button>
                                     
