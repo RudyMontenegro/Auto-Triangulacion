@@ -31,7 +31,7 @@
                           <div class="row justify-content-center">
                               <div class="col-md-10">
                                   <div class="card" >
-                                    <form action="{{url('entel/register')}}" method="post" enctype="multipart/form-data">
+                                    <form action="{{url('entel/register/XLSX')}}" method="post" enctype="multipart/form-data">
                                         {{ csrf_field()}}
                                         <table class="table table-striped" id="tabla">
                                             <thead style="background : rgb(78, 137, 225">
@@ -47,21 +47,20 @@
                                                 <tr id="columna-0">
                                                     <th>
                                                         <input type="integer" class="form-control text-white required" name="numero_usuario[]" id="numero_usuario"  style="border-color: rgb(78, 137, 225)"
-                                                            value="{{old('nombre_usuario')}}" onkeyup="validarNumeroUsuario()" autocomplete="off">
+                                                            value="{{old('nombre_usuario')}}" onkeyup="validarNumeroUsuario()" autocomplete="off" 
+                                                            onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
                                                         <datalist id="numero_usuario">
                                                         {!!  $errors->first('numero_usuario','<div class="invalid-feedback">:message</div>') !!}
                                                     </th>
-                                                    <span id="estadoNumeroUsuario"></span>
                                                     <td>
                                                         <input type="text"  class="form-control text-white  {{$errors->has('nombre')?'is-invalid':'' }} required" name="nombre[]" style="border-color: rgb(78, 137, 225)" 
                                                             id="nombre" value="{{old('nombre')}}" onkeyup="comprobarNombre()" autocomplete="off">
                                                     </td>
-                                                    <span id="estadoNombre"></span>
                                                     <td>
                                                         <input type="int" class="form-control text-white ){{$errors->has('unidad')?'is-invalid':'' }} required" name="ci[]" style="border-color: rgb(78, 137, 225)" 
-                                                        id="ci" value="{{old('ci')}}" onkeyup="validarCi()" autocomplete="off"> 
+                                                        id="ci" value="{{old('ci')}}" onkeyup="validarCi()" autocomplete="off" 
+                                                        onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"> 
                                                     </td>
-                                                    <span id="estadoCi"></span>
                                                     <td class="eliminar" id="deletRow" name="deletRow">
                                                         <div class="text-center">
                                                             <button class="btn btn-icon btn-danger"  type="button">
@@ -72,6 +71,9 @@
                                                 </tr>
                                             </tbody>
                                         </table>
+                                        <span id="estadoNumeroUsuario"></span>
+                                        <span id="estadoNombre" class="text-center"></span>
+                                        <span id="estadoCi" class="text-right"></span>
             
                                     <button type="button" class="btn btn-secundary btn-lg btn-block" id="add" name="add">Añadir</button>
                                     
@@ -91,16 +93,15 @@
 
 <script>
     
-var bb = 0;
+iman = 0;
 $(function() {
     console.log(existeValor("numero_usuario"));
         $("#add").on('click', function() {
             if(!existeValor("numero_usuario") && !existeValor("nombre") && !existeValor("ci"))
             {
-                bb = bb + 1;
-                $("#tabla tbody tr:eq(0)").clone().appendTo("#tabla").find('input')
+                iman = iman + 1;
+                $("#tabla tbody tr:eq(0)").clone().appendTo("#tabla").attr("id","columna-" + (iman)).find('input')
                 .attr('readonly', true);
-                bb = bb + 1;
                 limpiarCampos();
                 $("#stateRow").html("<span  class='menor'><h5 class='menor'></h5></span>");
             } else {
@@ -112,12 +113,11 @@ $(function() {
             
         });
         $(document).on("click", ".eliminar", function() {
-            if (bb > 0) {
-                var parent = $(this).parents().get(0);
-                $(parent).remove();
-                bb = bb - 1;
-                limpiarCampos();
-            }
+          if($(this).parents('tr').attr('id') != "columna-0"){
+            $(this).parents('tr').remove();
+          }else{
+            limpiarCampos();
+          }
         });
    
 });
@@ -157,7 +157,7 @@ function existeValor($dato) {
                  $("#estadoNombre").html("<span  class='menor'><h5 class='menor'>Solo se acepta letras [A-Z]</h5></span>");
                 }else{
                  $("#estadoNombre").html("<span  class='menor'><h5 class='menor'> </h5></span>");
-             }
+             }  
         }
     }
     function validarNumeroUsuario() {
@@ -181,7 +181,7 @@ function existeValor($dato) {
         }
     }
     function validarCi() {
-        var re = new RegExp("^[+-]?([0-9]+([.|,][0-9]*)?|[.][0-9]+)$");
+        var re = new RegExp("^[+-]?([0-9]+([.|,][0-9]*)?|[.][0-9]+)$|min:5");
         
         if($("#ci").val() == ""){
             $("#estadoCi").html("<span  class='menor'><h5 class='menor'> </h5></span>");
