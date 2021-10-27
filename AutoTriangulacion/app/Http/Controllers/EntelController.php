@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\entel;
+use App\excelModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel as Ex;
 
 class EntelController extends Controller
 {
@@ -49,7 +52,7 @@ class EntelController extends Controller
                 $viva -> save();
             }
         }
-        return view('ente.excel');
+        return view('entel.excel');
     }
 
     /**
@@ -95,5 +98,42 @@ class EntelController extends Controller
     public function destroy(entel $entel)
     {
         //
+    }
+
+    public function excel(entel $viva)
+    {
+        return view('viva.excel');
+    }
+
+    public function subirExcel(Request $request)
+    {
+        try {
+            if ($request->hasFile('archivos')){
+
+            $archivos = request('archivos');
+            $numero = request('numero');
+            $file = $request->file('archivos');
+            for ($i=0; $i < sizeOf($archivos); $i++) { 
+                
+                Ex::import(new excelModel,$file[$i]);
+
+                DB::table('excels')
+                ->where('identificador', null)
+                ->update(['identificador' => $numero[$i]]);
+                
+                
+            }
+
+            return view('pages.icons');
+        }
+        } catch (\Throwable $th) {
+
+            return view('errors.alerta',compact('th'));
+        }
+        
+        
+
+
+        
     }
 }
