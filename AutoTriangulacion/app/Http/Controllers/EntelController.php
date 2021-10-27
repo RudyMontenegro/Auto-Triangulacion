@@ -49,7 +49,7 @@ class EntelController extends Controller
                 $viva -> save();
             }
         }
-        return view('ente.excel');
+        return view('entel.excel');
     }
 
     /**
