@@ -123,7 +123,8 @@ class EntelController extends Controller
                 
                 
             }
-            $Matriz[0][1] = 454354;
+            
+
             $vertical = DB::table('entels')             //contar arreglo con count($vertical)
                             ->select('numero_usuario')
                             ->get();
@@ -132,45 +133,56 @@ class EntelController extends Controller
                             ->select('identificador')
                             ->groupBy('identificador')
                             ->get();
-            
-            for ($i=1; $i < count($vertical) ; $i++) { 
-                for ($j=1; $j < count($horizontal) ; $j++) { 
+
+            $Matriz[0][0] = 0;
+
+            for ($i=1; $i < count($vertical)+1 ; $i++) { 
+                for ($j=0; $j < count($horizontal)+1 ; $j++) { 
+
+                    if ($j==0) {
+                        $Matriz[$i][0] = $vertical[$i-1]->numero_usuario;
+                    }else{
+                        $Matriz[$i][$j]=0;
+                    }
+                   
+                }
+            }
+
+           
+            for ($i=0; $i < count($horizontal) ; $i++) { 
+                $Matriz[1][$i] = $horizontal[$i]->identificador;
+            }
+            for ($i=0; $i < count($vertical)+1 ; $i++) { 
+                for ($j=1; $j < count($horizontal)+1 ; $j++) { 
+
+                    if ($i==0) {
+                        $Matriz[0][$j] = $horizontal[$j-1]->identificador;
+                    }else{
+                        $Matriz[$i][$j]=0;
+                    }
+                   
+                }
+            }
+
+            for ($i=1; $i < count($vertical)+1 ; $i++) { 
+                for ($j=1; $j < count($horizontal)+1 ; $j++) { 
 
                     $consulta = DB::table('excels')
                                 ->select('*')
-                                ->where('identificador','=',$Matriz[0][$j])
+                                ->where('identificador','=',$Matriz[$i][0])
                                 ->get();
 
                     if(count($consulta) != 0){
                         $Matriz[$i][$j] = 1;
+                    }else{
+                        $Matriz[$i][$j] = 0;
                     }
-                    dd($Matriz );
-                    
                 }
             }
-            dd($Matriz);
-
-            $Matriz[0][0] = 12;
-            $Matriz[0][1] = 13;
-            $Matriz[0][2] = 14;
-            $Matriz[1][0] = 11;
-            $Matriz[1][1] = 12;
-            $Matriz[1][2] = 13;
-            $Matriz[2][0] = 15;
-            $Matriz[2][1] = 16;
-            $Matriz[2][2] = 17;
-
-            dd($Matriz);
-
             return view('entel.view',compact('Matriz'));
         }
         } catch (\Throwable $th) {
 
-            $horizontal = DB::table('excels')
-                            ->select('identificador')
-                            ->groupBy('identificador')
-                            ->get();
-                            dd($horizontal);
             return view('errors.alerta');
         }
         
