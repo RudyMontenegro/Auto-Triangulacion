@@ -179,7 +179,9 @@ class EntelController extends Controller
                     }
                 }
             }
-            return view('entel.view',compact('Matriz'));
+            $v = count($vertical)+1;
+            $h= count($horizontal)+1;
+            return view('entel.view',compact('Matriz','v','h'));
         }
         } catch (\Throwable $th) {
 
