@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => __('Icons'), 'pageSlug' => 'icons'])
+@extends('layouts.app', ['page' => __('ENTEL'), 'pageSlug' => 'icons'])
 @section('content')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
@@ -59,7 +59,7 @@
                                                     <td>
                                                         <input type="int" class="form-control text-white ){{$errors->has('unidad')?'is-invalid':'' }} required" name="ci[]" style="border-color: rgb(78, 137, 225)" 
                                                         id="ci" value="{{old('ci')}}" onkeyup="validarCi()" autocomplete="off" 
-                                                        onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"> 
+                                                        onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122)"> 
                                                     </td>
                                                     <td class="eliminar" id="deletRow" name="deletRow">
                                                         <div class="text-center">
@@ -71,25 +71,19 @@
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        <span id="estadoNumeroUsuario"></span>
                                         <span id="estadoNombre" class="text-center"></span>
-                                        <span id="estadoCi" class="text-right"></span>
             
                                     <button type="button" class="btn btn-secundary btn-lg btn-block" id="add" name="add">Añadir</button>
-                                    
                                   </div>
                               </div>
                           </div>
-
-                      </div>
-                        
-            </div>
-            <a href="{{ url('home') }}" class="btn btn-sm btn-danger">Cancelar</a>
-         
+                    </div>    
+             </div>
+              <a href="{{ url('home') }}" class="btn btn-sm btn-danger">Cancelar</a>
             <button class="btn btn-sm btn-secundary float-right" id="sig" name="sig" disabled>Siguiente</button>
         </form>
     </div>
-      </div>
+ </div>
 
 <script>
     
@@ -158,46 +152,6 @@ function existeValor($dato) {
                 }else{
                  $("#estadoNombre").html("<span  class='menor'><h5 class='menor'> </h5></span>");
              }  
-        }
-    }
-    function validarNumeroUsuario() {
-        var re = new RegExp("^[+-]?([0-9]+([.|,][0-9]*)?|[.][0-9]+)$");
-        
-        if($("#numero_usuario").val() == ""){
-            $("#estadoNumeroUsuario").html("<span  class='menor'><h5 class='menor'> </h5></span>");
-        }else{
-            if($("#numero_usuario").val() <= 0){
-                $("#estadoNumeroUsuario").html("<span  class='menor'><h5 class='menor'>Numero debe ser mayor a 0</h5></span>");
-            }else{
-                if(!re.test($("#numero_usuario").val()) || $("#numero_usuario").val() == 'e' ||  $("#numero_usuario").val() == '-'){
-                    $("#estadoNumeroUsuario").html("<span  class='menor'><h5 class='menor'>Numero incorrecto</h5></span>");
-                }else{
-                    prueba.style.borderColor = '#cad1d7';
-                    
-                    $("#estadoNumeroUsuario").html("<span  class='menor'><h5 class='menor'> </h5></span>");
-                    
-                }
-            }
-        }
-    }
-    function validarCi() {
-        var re = new RegExp("^[+-]?([0-9]+([.|,][0-9]*)?|[.][0-9]+)$|min:5");
-        
-        if($("#ci").val() == ""){
-            $("#estadoCi").html("<span  class='menor'><h5 class='menor'> </h5></span>");
-        }else{
-            if($("#ci").val() <= 0){
-                $("#estadoCi").html("<span  class='menor'><h5 class='menor'>Numero debe ser mayor a 0</h5></span>");
-            }else{
-                if(!re.test($("#ci").val()) || $("#ci").val() == 'e' ||  $("#ci").val() == '-'){
-                    $("#estadoCi").html("<span  class='menor'><h5 class='menor'>Numero incorrecto</h5></span>");
-                }else{
-                    prueba.style.borderColor = '#cad1d7';
-                    
-                    $("#estadoCi").html("<span  class='menor'><h5 class='menor'> </h5></span>");
-                    
-                }
-            }
         }
     }
 

@@ -25,6 +25,7 @@
     </div>
     <div class="col-lg-4">
         <button type="button" class="btn btn-default">
+            <a href="{{url('/tigo/register')}}">
             <h3 class="card-title"><i class="tim-icons icon-send text-info"></i>TIGO</h3>
             <img src="{{ asset('images/carrierLogo/tigo.jpg') }}" width="300" height="250"
                 class="rounded mx-auto d-block" alt="Responsive image">
