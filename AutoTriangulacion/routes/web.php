@@ -59,7 +59,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::group(['middleware' => 'auth'], function () {
 	
-	Route::post('entel/register/XLSX/view', ['as' => 'entel.subirExcel', 'uses' => 'TigoController@subirExcel']);
+	//Route::post('entel/register/XLSX/view', ['as' => 'entel.subirExcel', 'uses' => 'TigoController@subirExcel']);
 	
 	Route::get('tigo/register',['as' => 'tigo.create','uses' => 'TigoController@create']);
 	Route::post('tigo/register/XLSX',['as' => 'tigo.store','uses' => 'TigoController@store']);
