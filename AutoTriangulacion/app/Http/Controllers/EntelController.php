@@ -123,12 +123,55 @@ class EntelController extends Controller
                 
                 
             }
+            $Matriz[0][1] = 454354;
+            $vertical = DB::table('entels')             //contar arreglo con count($vertical)
+                            ->select('numero_usuario')
+                            ->get();
 
-            return view('entel.view');
+            $horizontal = DB::table('excels')           //contar arreglo con count($horizontal)
+                            ->select('identificador')
+                            ->groupBy('identificador')
+                            ->get();
+            
+            for ($i=1; $i < count($vertical) ; $i++) { 
+                for ($j=1; $j < count($horizontal) ; $j++) { 
+
+                    $consulta = DB::table('excels')
+                                ->select('*')
+                                ->where('identificador','=',$Matriz[0][$j])
+                                ->get();
+
+                    if(count($consulta) != 0){
+                        $Matriz[$i][$j] = 1;
+                    }
+                    dd($Matriz );
+                    
+                }
+            }
+            dd($Matriz);
+
+            $Matriz[0][0] = 12;
+            $Matriz[0][1] = 13;
+            $Matriz[0][2] = 14;
+            $Matriz[1][0] = 11;
+            $Matriz[1][1] = 12;
+            $Matriz[1][2] = 13;
+            $Matriz[2][0] = 15;
+            $Matriz[2][1] = 16;
+            $Matriz[2][2] = 17;
+
+            dd($Matriz);
+
+            return view('entel.view',compact('Matriz'));
         }
         } catch (\Throwable $th) {
 
-            return view('errors.alerta',compact('th'));
+            $horizontal = DB::table('excels')
+                            ->select('identificador')
+                            ->groupBy('identificador')
+                            ->get();
+                            dd($horizontal);
+            return view('errors.alerta');
         }
         
         
