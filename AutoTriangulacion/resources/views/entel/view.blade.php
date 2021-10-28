@@ -17,12 +17,12 @@
                             <span id="mensaje">d</span>
                           </div>
 
-                        @for ($i = 0; $i < count($Matriz); $i++)
-                        
-                        @for ($j = 0 ; $j < 0 ; $j++ )
-                            
-                        @endfor
-                        @endfor
+                          @for ($i = 0; $i < 4; $i++)
+                              @for ($j = 0; $j < 2; $j++)
+                                  {{$Matriz[$i][$j]}}
+                              @endfor
+                        </br>
+                          @endfor
           
                   </div>
               </div>
