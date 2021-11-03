@@ -39,6 +39,8 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::put('profile', ['as' => 'profile.update', 'uses' => 'ProfileController@update']);
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'ProfileController@password']);
 });
+
+//VIVA
 Route::group(['middleware' => 'auth'], function () {
 	Route::get('example/entel', ['as' => 'pages.exampleConvert.entelExample', 'uses' => 'PageController@example']);
 	Route::get('viva/register/XLSX', ['as' => 'pages.excel', 'uses' => 'VivaController@excel']);
@@ -48,6 +50,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('viva/register/XLSX',['as' => 'viva.store','uses' => 'VivaController@store']);
 });
 
+//ENTEL
 Route::group(['middleware' => 'auth'], function () {
 	//Route::get('entel/register/XLSX', ['as' => 'entel.excel', 'uses' => 'EntelController@excel']);
 	Route::post('entel/register/XLSX/view', ['as' => 'entel.subirExcel', 'uses' => 'EntelController@subirExcel']);
@@ -57,10 +60,10 @@ Route::group(['middleware' => 'auth'], function () {
 	
 });
 
+//TIGO
 Route::group(['middleware' => 'auth'], function () {
 	
 	//Route::post('entel/register/XLSX/view', ['as' => 'entel.subirExcel', 'uses' => 'TigoController@subirExcel']);
-	
 	Route::get('tigo/register',['as' => 'tigo.create','uses' => 'TigoController@create']);
 	Route::post('tigo/register/XLSX',['as' => 'tigo.store','uses' => 'TigoController@store']);
 	

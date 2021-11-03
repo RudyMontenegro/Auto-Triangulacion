@@ -56,7 +56,7 @@
                                                             id="nombre" value="{{old('nombre')}}" onkeyup="comprobarNombre()" autocomplete="off">
                                                     </td>
                                                     <td>
-                                                        <input type="int" class="form-control text-white ){{$errors->has('ci')?'is-invalid':'' }} required" name="ci[]" style="border-color: rgb(78, 137, 225)" 
+                                                        <input type="int" class="form-control text-white {{$errors->has('ci')?'is-invalid':'' }} required" name="ci[]" style="border-color: rgb(78, 137, 225)" 
                                                         id="ci" value="{{old('ci')}}" onkeyup="validarCi()" autocomplete="off" 
                                                         onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122)"> 
                                                     </td>
