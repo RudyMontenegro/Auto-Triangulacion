@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\entel;
 use App\excelModel;
+use FarhanWazir\GoogleMaps\GMaps;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel as Ex;
@@ -189,8 +190,32 @@ class EntelController extends Controller
         }
         
         
-
-
         
     }
+
+    public function gps(entel $entel)
+    {
+
+        $gmapconfig['center'] = '-17.3800261, -66.1520779';
+        $gmapconfig['zoom'] = '14';
+        $gmapconfig['map_height'] = '500px';
+       // $gmapconfig['geocodeCaching'] = true;
+
+        //GMaps::initialize($config);
+        $livegooglemap = new GMaps();
+        $livegooglemap->initialize($gmapconfig);
+        
+        $marker['position'] = '-17.3800261, -66.1520779';
+        //$marker['infowindow_content'] = 'Rajkot Railway Station,India';
+
+        $livegooglemap->add_marker($marker);
+        $map = $livegooglemap->create_map();
+        return view('entel.location')->with('map',$map);
+    }
+
+    public function localizacion(entel $entel)
+    {
+        return view('entel.location');
+    }
+
 }

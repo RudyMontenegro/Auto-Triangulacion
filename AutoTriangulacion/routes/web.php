@@ -54,6 +54,9 @@ Route::group(['middleware' => 'auth'], function () {
 	//Route::get('entel/register/XLSX/view', ['as' => 'entel.show', 'uses' => 'EntelController@show']);
 	Route::get('entel/register',['as' => 'entel.create','uses' => 'EntelController@create']);
 	Route::post('entel/register/XLSX',['as' => 'entel.store','uses' => 'EntelController@store']);
+	//GPS
+	Route::get('entel/informe/GPS',['as' => 'entel.gps','uses' => 'EntelController@gps']);
+	Route::post('entel/informe/GPS',['as' => 'entel.localizacion','uses' => 'EntelController@localizacion']);
 	
 });
 
