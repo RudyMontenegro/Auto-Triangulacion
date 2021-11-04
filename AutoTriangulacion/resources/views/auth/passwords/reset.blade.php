@@ -1,4 +1,4 @@
-@extends('layouts.app', ['class' => 'login-page', 'page' => __('Reset password'), 'contentClass' => 'login-page'])
+@extends('layouts.app', ['class' => 'login-page', 'page' => __('Reestablecer Contraseña'), 'contentClass' => 'login-page'])
 
 @section('content')
     <div class="col-lg-5 col-md-7 ml-auto mr-auto">
@@ -8,7 +8,7 @@
             <div class="card card-login card-white">
                 <div class="card-header">
                     <img src="{{ asset('black') }}/img/card-primary.png" alt="">
-                    <h1 class="card-title">{{ __('Reset password') }}</h1>
+                    <h1 class="card-title">{{ __('Reestablecer Contraseña') }}</h1>
                 </div>
                 <div class="card-body">
                     @include('alerts.success')
