@@ -25,9 +25,12 @@
                   <div class="card">
                           
                           <div class="text-center">
-                          
-                            {!! $map['js'] !!}
+
+                               {!! $map['js'] !!}
                             {!! $map['html'] !!}
+
+                            
+                           
                           </div>
                   </div>
               </div>

@@ -196,21 +196,31 @@ class EntelController extends Controller
     public function gps(entel $entel)
     {
 
-        $gmapconfig['center'] = '-17.3800261, -66.1520779';
+        $gmapconfig['center'] = '-17.012306, -65.058917';
         $gmapconfig['zoom'] = '14';
         $gmapconfig['map_height'] = '500px';
-       // $gmapconfig['geocodeCaching'] = true;
+        $gmapconfig['map_type'] = 'SATELLITE';
+        $gmapconfig['scrollwheel'] = false;
+        $gmapconfig['disableDefaultUI'] = true;
 
         //GMaps::initialize($config);
         $livegooglemap = new GMaps();
         $livegooglemap->initialize($gmapconfig);
         
-        $marker['position'] = '-17.3800261, -66.1520779';
-        //$marker['infowindow_content'] = 'Rajkot Railway Station,India';
+        $marker['position'] = '-17.012306, -65.058917';
+        $marker['infowindow_content'] = 'dddddd';
+        //$marker['icon'] = 'https://chart.googleapis.com/chart?chst=d_map_xpin_icon&chld=pin';
+
+        //https://chart.googleapis.com/chart?chst=d_bubble_icon_text_small&chld=ski|bb|Wheeee!|FFFFFF|000000
 
         $livegooglemap->add_marker($marker);
         $map = $livegooglemap->create_map();
-        return view('entel.location')->with('map',$map);
+        
+        
+
+        
+//dd($var);
+        return view('entel.location',compact('map'));
     }
 
     public function localizacion(entel $entel)
