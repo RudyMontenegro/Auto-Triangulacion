@@ -193,4 +193,38 @@ class EntelController extends Controller
 
         
     }
+    
+
+    public function imprimir(){
+
+            $gmapconfig['center'] = '-17.012306, -65.058917';
+            $gmapconfig['zoom'] = '14';
+            $gmapconfig['map_height'] = '500px';
+            $gmapconfig['map_type'] = 'SATELLITE';
+            $gmapconfig['scrollwheel'] = false;
+            $gmapconfig['disableDefaultUI'] = true;
+    
+            //GMaps::initialize($config);
+            $livegooglemap = new GMaps();
+            $livegooglemap->initialize($gmapconfig);
+            
+            $marker['position'] = '-17.012306, -65.058917';
+            $marker['infowindow_content'] = 'dddddd';
+            //$marker['icon'] = 'https://chart.googleapis.com/chart?chst=d_map_xpin_icon&chld=pin';
+    
+            //https://chart.googleapis.com/chart?chst=d_bubble_icon_text_small&chld=ski|bb|Wheeee!|FFFFFF|000000
+    
+            $livegooglemap->add_marker($marker);
+            $map = $livegooglemap->create_map();
+
+        $datos = DB::table('entels')
+        ->select('*')
+        ->get();
+               
+        $pdf = \PDF::loadView('entel.pdf',compact('datos'));// direccion del view, enviando variable.
+    
+        return $pdf->setPaper('a4', 'landscape')->stream('entel.pdf');//stream-> solo muestra en el navegador
+        //a4, landscape-> enviar en formato horizontal
+    }
+
 }
