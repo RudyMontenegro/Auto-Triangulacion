@@ -1,6 +1,8 @@
 @extends('layouts.app', ['page' => __('ENTEL'), 'pageSlug' => 'icons'])
 @section('content')
 
+<link href="{{ asset('table') }}/css/viewEntel.css" rel="stylesheet" />
+
 <div class="row justify-content-center">
     <div class="col-md-10">
         <div class="card">
@@ -12,18 +14,46 @@
             <div class="row justify-content-center">
               <div class="col-md-10">
                   <div class="card">
-                          
-                          <div class="text-center">
-                          
 
-                          @for ($i = 0; $i < $v; $i++)
-                              @for ($j = 0; $j < $h; $j++)
-                                  {{$Matriz[$i][$j]}}
-                              @endfor
-                        </br>
-                          @endfor
+                  <div id="resp-table" >
+                    @for ($i = 0; $i < $v; $i++)
+                      <div class="resp-table-row">
+                        @for ($j = 0; $j < $h; $j++)
+                          
+                            @if ($i==0 || $j==0)
+                            <div class="table-body-cell2">
+                                <div class="text-center text-white">
+                                  @if ($Matriz[$i][$j] != 0)
+                                     {{$Matriz[$i][$j]}}
+                                     
+                                  @endif
+                                </div>
+                            </div>
+                            @else
+                            
+                                  @if ($Matriz[$i][$j] != 0)
+                                  <div class="table-body-cell3">
+                                  </div>
+                                  @else
+                                  <div class="table-body-cell">
+                                  </div>  
+                                  @endif
+                                  
+                                
+                            @endif
+                           
+                          
+                        @endfor
+                        
+                    </br>
+                    </div>
+                    @endfor
+                  </div>
+                
+                  
 
-                          </div>
+                  <br>
+              
                   </div>
               </div>
             </div>

@@ -64,7 +64,7 @@ class EntelController extends Controller
      */
     public function show(entel $entel)
     {
-        //return view('entel.view');
+        return view('entel.view');
     }
 
     /**
@@ -149,10 +149,12 @@ class EntelController extends Controller
                 }
             }
 
-           
+
             for ($i=0; $i < count($horizontal) ; $i++) { 
-                $Matriz[1][$i] = $horizontal[$i]->identificador;
+                $Matriz[0][$i+1] = $horizontal[$i]->identificador;
             }
+
+            /*
             for ($i=0; $i < count($vertical)+1 ; $i++) { 
                 for ($j=1; $j < count($horizontal)+1 ; $j++) { 
 
@@ -163,25 +165,29 @@ class EntelController extends Controller
                     }
                    
                 }
-            }
+            }*/
 
             for ($i=1; $i < count($vertical)+1 ; $i++) { 
                 for ($j=1; $j < count($horizontal)+1 ; $j++) { 
 
                     $consulta = DB::table('excels')
                                 ->select('*')
-                                ->where('identificador','=',$Matriz[$i][0])
-                                ->get();
+                                ->where('numeroA','=',$Matriz[$i][0])
+                                ->orWhere('numeroB','=',$Matriz[$i][0])
+                                ->exists();
 
-                    if(count($consulta) != 0){
+                    if($consulta){
                         $Matriz[$i][$j] = 1;
                     }else{
                         $Matriz[$i][$j] = 0;
                     }
                 }
+             
             }
             $v = count($vertical)+1;
             $h= count($horizontal)+1;
+
+          
             return view('entel.view',compact('Matriz','v','h'));
         }
         } catch (\Throwable $th) {
@@ -196,6 +202,49 @@ class EntelController extends Controller
     public function gps(entel $entel)
     {
 
+
+        $coordenadasA = DB::table('excels')
+                        ->select('coordenadaA')
+                        ->where('coordenadaA','<>','-')
+                        ->groupBy('coordenadaA')
+                        ->get();
+                        
+        $coordenadasB = DB::table('excels')
+                        ->select('coordenadaB')
+                        ->where('coordenadaB','<>','-')
+                        ->groupBy('coordenadaB')
+                        ->get();
+        $coordenadas = [];
+        foreach ($coordenadasA as $coordenadasA ) {
+            array_push($coordenadas, $coordenadasA->coordenadaA );
+        }
+        foreach ($coordenadasB as $coordenadasB) {
+            array_push($coordenadas, $coordenadasB->coordenadaB);
+        }
+        $coordenadasUnicas = array_unique($coordenadas);
+
+         $final = [];
+
+        foreach ($coordenadasUnicas as $coordenadasUnicas) {
+            
+            $cordenadaA = DB::table('excels')
+                        ->select('radio_baseA as radio_base','coordenadaA as coordenada')
+                        ->where('coordenadaA','=',$coordenadasUnicas)
+                        ->first();
+            $cordenadaB = DB::table('excels')
+                        ->select('radio_baseB as radio_base','coordenadaB as coordenada')
+                        ->where('coordenadaB','=',$coordenadasUnicas)
+                        ->first();
+
+            if ($cordenadaA == null) {
+                array_push($final, $cordenadaB);
+            }else{
+                array_push($final, $cordenadaA);
+            }
+                
+        }
+
+        /*
         $gmapconfig['center'] = '-17.012306, -65.058917';
         $gmapconfig['zoom'] = '14';
         $gmapconfig['map_height'] = '500px';
@@ -216,11 +265,11 @@ class EntelController extends Controller
         $livegooglemap->add_marker($marker);
         $map = $livegooglemap->create_map();
         
-        
+        */
 
         
 //dd($var);
-        return view('entel.location',compact('map'));
+        return view('entel.location',compact('final'));
     }
 
     public function localizacion(entel $entel)

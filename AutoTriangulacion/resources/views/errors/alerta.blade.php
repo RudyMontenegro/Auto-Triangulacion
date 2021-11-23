@@ -33,7 +33,7 @@
           </div>
         </div>
         <div class="text-center">
-        <a href="{{ url('create/XLSX') }}" class="btn btn-sm btn-secondary">volver</a>
+        <a href="{{ url('entel/register/XLSX') }}" class="btn btn-sm btn-secondary">volver</a>
         </div>
 
     </div>
