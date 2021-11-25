@@ -33,6 +33,10 @@
                             
                                   @if ($Matriz[$i][$j] != 0)
                                   <div class="table-body-cell3">
+                                    <div class="text-white text-center">
+                                          {{ $Matriz[$i][$j]}}
+                                    </div>
+                                   
                                   </div>
                                   @else
                                   <div class="table-body-cell">
@@ -53,8 +57,10 @@
                   
 
                   <br>
-              
+                  
                   </div>
+
+                  <a href="{{ url('home') }}" class="btn btn-sm btn-danger">Siguiente</a>
               </div>
             </div>
           </div>

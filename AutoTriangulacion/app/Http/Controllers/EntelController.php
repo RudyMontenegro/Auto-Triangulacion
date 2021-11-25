@@ -116,11 +116,20 @@ class EntelController extends Controller
             $file = $request->file('archivos');
             for ($i=0; $i < sizeOf($archivos); $i++) { 
                 
-                Ex::import(new excelModel,$file[$i]);
 
-                DB::table('excels')
-                ->where('identificador', null)
-                ->update(['identificador' => $numero[$i]]);
+                $existe = DB::table('excels')
+                            ->select('*')
+                            ->where('identificador', $numero[$i])
+                            ->exists();
+
+                if (!$existe) {
+                    Ex::import(new excelModel,$file[$i]);
+
+                    DB::table('excels')
+                    ->where('identificador', null)
+                    ->update(['identificador' => $numero[$i]]);
+                }
+                
                 
                 
             }
@@ -177,7 +186,19 @@ class EntelController extends Controller
                                 ->exists();
 
                     if($consulta){
-                        $Matriz[$i][$j] = 1;
+
+                        $aux1 = DB::table('excels')
+                                ->select('numeroA')
+                                ->where('numeroA','=',$Matriz[$i][0])
+                                ->count();
+
+                                
+                        $aux2 = DB::table('excels')
+                                ->select('numeroB')
+                                ->where('numeroB','=',$Matriz[$i][0])
+                                ->count();
+
+                        $Matriz[$i][$j] = $aux1+$aux2;
                     }else{
                         $Matriz[$i][$j] = 0;
                     }
