@@ -7,7 +7,9 @@ use App\excelModel;
 use FarhanWazir\GoogleMaps\GMaps;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel as Ex;
+use PDF;
 
 class EntelController extends Controller
 {
@@ -297,5 +299,29 @@ class EntelController extends Controller
     {
         return view('entel.location');
     }
+
+    public function printPDF(){
+
+        set_time_limit(300);
+
+        $sLat = '-17.012306';
+        $sLong = '-65.058917';
+        $image = file_get_contents('http://maps.googleapis.com/maps/api/staticmap?key=AIzaSyD3T_I3XRvnKbXL4ppS9boJpphoyh0igiw&center='
+        . $sLat. ",". $sLong
+        . '&maptype=hybrid'
+        .'&zoom=14&size=600x400&markers=size:tiny|color:red|'
+        . $sLat. ",". $sLong);
+
+        
+        Storage::disk('print')->put('mapaPrueba'.'.jpg', $image);
+        
+
+        $pdf = \PDF::loadView('entel.pdf');
+    
+         return $pdf->setPaper('a4', 'landscape')
+                    ->stream('entel.pdf');
+
+    }
+
 
 }

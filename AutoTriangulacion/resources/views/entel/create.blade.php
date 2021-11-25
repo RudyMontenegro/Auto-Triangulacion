@@ -74,6 +74,8 @@
                                         <span id="estadoNombre" class="text-center"></span>
             
                                     <button type="button" class="btn btn-secundary btn-lg btn-block" id="add" name="add">Añadir</button>
+
+                                    <a href="{{url('/entel/register/XLSX/view/pdf')}}" class="btn btn-sm btn-warning" >PDF</a>
                                   </div>
                               </div>
                           </div>
