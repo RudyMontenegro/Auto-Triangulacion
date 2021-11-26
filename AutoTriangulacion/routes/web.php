@@ -57,8 +57,14 @@ Route::group(['middleware' => 'auth'], function () {
 	//GPS
 	Route::get('entel/informe/GPS',['as' => 'entel.gps','uses' => 'EntelController@gps']);
 	Route::post('entel/informe/GPS',['as' => 'entel.localizacion','uses' => 'EntelController@localizacion']);
-	//impresion
+
+	//impresion de imagen
+	Route::post('entel/register/XLSX/view/tabla', ['as' => 'entel.printImage', 'uses' => 'EntelController@printImage']);
+	//Route::post('save-dashboard-report', 'DashboardReportController@save');
+
+	//impresion mapa PDF
 	Route::get('entel/register/XLSX/view/pdf', ['as' => 'entel.printPDF', 'uses' => 'EntelController@printPDF']);
+	
 	
 });
 

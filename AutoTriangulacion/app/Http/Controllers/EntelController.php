@@ -324,4 +324,23 @@ class EntelController extends Controller
     }
 
 
+    public function printImage(){
+
+        /*
+        // decode your image first.
+        $imagedata = base64_decode($_REQUEST['base64data']);
+        // make random name
+        
+        $filename = md5(uniqid(rand(), true));
+        //path where you want to upload image
+        $file = $_SERVER['DOCUMENT_ROOT'] . '/public/capturas'.$filename.'.jpg';
+        dd($file);
+        file_put_contents($file,$imagedata);
+        */
+        $data = $_REQUEST['base64data'];
+        $image = explode('base64', $data);
+        file_put_contents(public_path('1.jpg'), base64_decode($image[1]));
+     }
+
+
 }
