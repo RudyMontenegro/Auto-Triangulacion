@@ -106,6 +106,200 @@ class EntelController extends Controller
         return view('entel.excel');
     }
 
+    public function informe(entel $viva)
+    {
+        $vertical = DB::table('entels')             //contar arreglo con count($vertical)
+                            ->select('numero_usuario')
+                            ->get();
+
+            $horizontal = DB::table('excels')           //contar arreglo con count($horizontal)
+                            ->select('identificador')
+                            ->groupBy('identificador')
+                            ->get();
+
+            $Matriz[0][0] = 0;
+
+            for ($i=1; $i < count($vertical)+1 ; $i++) { 
+                for ($j=0; $j < count($horizontal)+1 ; $j++) { 
+
+                    if ($j==0) {
+                        $Matriz[$i][0] = $vertical[$i-1]->numero_usuario;
+                    }else{
+                        $Matriz[$i][$j]=0;
+                    }
+                   
+                }
+            }
+
+
+            for ($i=0; $i < count($horizontal) ; $i++) { 
+                $Matriz[0][$i+1] = $horizontal[$i]->identificador;
+            }
+
+            for ($i=1; $i < count($vertical)+1 ; $i++) { 
+                for ($j=1; $j < count($horizontal)+1 ; $j++) { 
+
+                    $consulta = DB::table('excels')
+                                ->select('*')
+                                ->where('numeroA','=',$Matriz[$i][0])
+                                ->orWhere('numeroB','=',$Matriz[$i][0])
+                                ->exists();
+
+                    if($consulta){
+
+                        $Matriz[$i][$j] = 1;
+                    }else{
+                        $Matriz[$i][$j] = 0;
+                    }
+                }
+             
+            }
+            
+            $lista = [];
+            $cant = 0;
+
+            for ($i=1; $i < count($vertical)+1 ; $i++) { 
+                for ($j=1; $j < count($horizontal)+1 ; $j++) { 
+
+
+                    $consulta = DB::table('excels')
+                                ->select('*')
+                                ->where('identificador','=',$Matriz[0][$j])
+                                ->orWhere('numeroA','=',$Matriz[$i][0])
+                                ->orWhere('numeroB','=',$Matriz[$i][0])
+                                ->exists();
+
+                    if($consulta){
+
+                        $temp = [];
+
+                       $aux1 = DB::table('excels')
+                                ->select('*')
+                                ->where('identificador','=',$Matriz[0][$j])
+                                ->Where('numeroA','=',$Matriz[$i][0])
+                                ->get();
+
+                    
+                        $aux2 = DB::table('excels')
+                                ->select('*')
+                                ->where('identificador','=',$Matriz[0][$j])
+                                ->Where('numeroB','=',$Matriz[$i][0])
+                                ->get();
+                        
+                        $aux3 = DB::table('excels')
+                                ->select('*')
+                                ->where('identificador','=',$Matriz[0][$j])
+                                ->Where('numeroA','=',$Matriz[$i][0])
+                                ->count();
+
+                    
+                        $aux4 = DB::table('excels')
+                                ->select('*')
+                                ->where('identificador','=',$Matriz[0][$j])
+                                ->Where('numeroB','=',$Matriz[$i][0])
+                                ->count();
+                        
+                        foreach ($aux1 as $aux1) {
+                            array_push($temp, $aux1);
+                        }
+
+                        foreach ($aux2 as $aux2) {
+                            array_push($temp, $aux2);
+                        }
+
+                        $cant = $cant + 1;
+
+                    }
+                    array_push($lista, $temp);
+                }
+             
+            }
+
+        return view('entel.informe',compact('lista','cant'));
+    }
+    
+    public function mostrarTabla(entel $viva)
+    {
+        $vertical = DB::table('entels')             //contar arreglo con count($vertical)
+                            ->select('numero_usuario')
+                            ->get();
+
+            $horizontal = DB::table('excels')           //contar arreglo con count($horizontal)
+                            ->select('identificador')
+                            ->groupBy('identificador')
+                            ->get();
+
+            $Matriz[0][0] = 0;
+
+            for ($i=1; $i < count($vertical)+1 ; $i++) { 
+                for ($j=0; $j < count($horizontal)+1 ; $j++) { 
+
+                    if ($j==0) {
+                        $Matriz[$i][0] = $vertical[$i-1]->numero_usuario;
+                    }else{
+                        $Matriz[$i][$j]=0;
+                    }
+                   
+                }
+            }
+
+
+            for ($i=0; $i < count($horizontal) ; $i++) { 
+                $Matriz[0][$i+1] = $horizontal[$i]->identificador;
+            }
+
+            /*
+            for ($i=0; $i < count($vertical)+1 ; $i++) { 
+                for ($j=1; $j < count($horizontal)+1 ; $j++) { 
+
+                    if ($i==0) {
+                        $Matriz[0][$j] = $horizontal[$j-1]->identificador;
+                    }else{
+                        $Matriz[$i][$j]=0;
+                    }
+                   
+                }
+            }*/
+
+            for ($i=1; $i < count($vertical)+1 ; $i++) { 
+                for ($j=1; $j < count($horizontal)+1 ; $j++) { 
+
+                    $consulta = DB::table('excels')
+                                ->select('*')
+                                ->where('identificador','=',$Matriz[0][$j])
+                                ->orWhere('numeroA','=',$Matriz[$i][0])
+                                ->orWhere('numeroB','=',$Matriz[$i][0])
+                                ->exists();
+
+                    if($consulta){
+
+                        $aux1 = DB::table('excels')
+                                ->select('numeroA')
+                                ->where('identificador','=',$Matriz[0][$j])
+                                ->Where('numeroA','=',$Matriz[$i][0])
+                                ->count();
+
+                                
+                        $aux2 = DB::table('excels')
+                                ->select('numeroB')
+                                ->where('identificador','=',$Matriz[0][$j])
+                                ->Where('numeroB','=',$Matriz[$i][0])
+                                ->count();
+
+                        $Matriz[$i][$j] = $aux1+$aux2;
+                    }else{
+                        $Matriz[$i][$j] = 0;
+                    }
+                }
+             
+            }
+            $v = count($vertical)+1;
+            $h= count($horizontal)+1;
+
+          
+            return view('entel.view',compact('Matriz','v','h'));
+    }
+    
     public function subirExcel(Request $request)
     {
         try {
@@ -181,7 +375,8 @@ class EntelController extends Controller
 
                     $consulta = DB::table('excels')
                                 ->select('*')
-                                ->where('numeroA','=',$Matriz[$i][0])
+                                ->where('identificador','=',$Matriz[0][$j])
+                                ->orWhere('numeroA','=',$Matriz[$i][0])
                                 ->orWhere('numeroB','=',$Matriz[$i][0])
                                 ->exists();
 
@@ -189,13 +384,15 @@ class EntelController extends Controller
 
                         $aux1 = DB::table('excels')
                                 ->select('numeroA')
-                                ->where('numeroA','=',$Matriz[$i][0])
+                                ->where('identificador','=',$Matriz[0][$j])
+                                ->Where('numeroA','=',$Matriz[$i][0])
                                 ->count();
 
                                 
                         $aux2 = DB::table('excels')
                                 ->select('numeroB')
-                                ->where('numeroB','=',$Matriz[$i][0])
+                                ->where('identificador','=',$Matriz[0][$j])
+                                ->Where('numeroB','=',$Matriz[$i][0])
                                 ->count();
 
                         $Matriz[$i][$j] = $aux1+$aux2;
