@@ -302,6 +302,82 @@ class EntelController extends Controller
 
     public function printPDF(){
 
+
+         $vertical = DB::table('entels')             //contar arreglo con count($vertical)
+                            ->select('numero_usuario')
+                            ->get();
+
+            $horizontal = DB::table('excels')           //contar arreglo con count($horizontal)
+                            ->select('identificador')
+                            ->groupBy('identificador')
+                            ->get();
+
+            $Matriz[0][0] = 0;
+
+            for ($i=1; $i < count($vertical)+1 ; $i++) { 
+                for ($j=0; $j < count($horizontal)+1 ; $j++) { 
+
+                    if ($j==0) {
+                        $Matriz[$i][0] = $vertical[$i-1]->numero_usuario;
+                    }else{
+                        $Matriz[$i][$j]=0;
+                    }
+                   
+                }
+            }
+
+
+            for ($i=0; $i < count($horizontal) ; $i++) { 
+                $Matriz[0][$i+1] = $horizontal[$i]->identificador;
+            }
+
+            /*
+            for ($i=0; $i < count($vertical)+1 ; $i++) { 
+                for ($j=1; $j < count($horizontal)+1 ; $j++) { 
+
+                    if ($i==0) {
+                        $Matriz[0][$j] = $horizontal[$j-1]->identificador;
+                    }else{
+                        $Matriz[$i][$j]=0;
+                    }
+                   
+                }
+            }*/
+
+            for ($i=1; $i < count($vertical)+1 ; $i++) { 
+                for ($j=1; $j < count($horizontal)+1 ; $j++) { 
+
+                    $consulta = DB::table('excels')
+                                ->select('*')
+                                ->where('numeroA','=',$Matriz[$i][0])
+                                ->orWhere('numeroB','=',$Matriz[$i][0])
+                                ->exists();
+
+                    if($consulta){
+
+                        $aux1 = DB::table('excels')
+                                ->select('numeroA')
+                                ->where('numeroA','=',$Matriz[$i][0])
+                                ->count();
+
+                                
+                        $aux2 = DB::table('excels')
+                                ->select('numeroB')
+                                ->where('numeroB','=',$Matriz[$i][0])
+                                ->count();
+
+                        $Matriz[$i][$j] = $aux1+$aux2;
+                    }else{
+                        $Matriz[$i][$j] = 0;
+                    }
+                }
+             
+            }
+            $v = count($vertical)+1;
+            $h= count($horizontal)+1;
+
+        //imprimir mapa
+
         set_time_limit(300);
 
         $sLat = '-17.012306';
@@ -314,33 +390,11 @@ class EntelController extends Controller
 
         
         Storage::disk('print')->put('mapaPrueba'.'.jpg', $image);
-        
 
-        $pdf = \PDF::loadView('entel.pdf');
+        $pdf = \PDF::loadView('entel.pdf',compact('Matriz', 'v' , 'h'));
     
          return $pdf->setPaper('a4', 'landscape')
                     ->stream('entel.pdf');
 
     }
-
-
-    public function printImage(){
-
-        /*
-        // decode your image first.
-        $imagedata = base64_decode($_REQUEST['base64data']);
-        // make random name
-        
-        $filename = md5(uniqid(rand(), true));
-        //path where you want to upload image
-        $file = $_SERVER['DOCUMENT_ROOT'] . '/public/capturas'.$filename.'.jpg';
-        dd($file);
-        file_put_contents($file,$imagedata);
-        */
-        $data = $_REQUEST['base64data'];
-        $image = explode('base64', $data);
-        file_put_contents(public_path('1.jpg'), base64_decode($image[1]));
-     }
-
-
 }

@@ -17,7 +17,6 @@
               <div class="col-md-10">
                   <div class="card" >
 
-                <div class="content">
                   <div id="resp-table" >
                     @for ($i = 0; $i < $v; $i++)
                       <div class="resp-table-row">
@@ -56,7 +55,6 @@
                     </div>
                     @endfor
                   </div>
-                </div>
                   
 
                   <br>
