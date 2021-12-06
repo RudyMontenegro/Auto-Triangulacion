@@ -51,7 +51,11 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['middleware' => 'auth'], function () {
 	Route::get('entel/register/XLSX', ['as' => 'entel.excel', 'uses' => 'EntelController@excel']);
 	Route::post('entel/register/XLSX/view', ['as' => 'entel.subirExcel', 'uses' => 'EntelController@subirExcel']);
-	//Route::get('entel/register/XLSX/view', ['as' => 'entel.show', 'uses' => 'EntelController@show']);
+	Route::get('entel/informe/registro/{registro}', ['as' => 'entel.informe', 'uses' => 'EntelController@informe']);
+	Route::get('entel/informe/registro', ['as' => 'entel.informeRegistro', 'uses' => 'EntelController@informeRegistro']);
+	//Route::get('entel/informe/registro/{registro}', ['as' => 'entel.informeRegistro', 'uses' => 'EntelController@informeRegistro ']);
+	Route::get('entel/informe/registro/{registro}/{fecha}', ['as' => 'entel.informeFecha', 'uses' => 'EntelController@informeFecha']);
+	Route::get('entel/register/XLSX/view', ['as' => 'entel.mostrarTabla', 'uses' => 'EntelController@mostrarTabla']);
 	Route::get('entel/register',['as' => 'entel.create','uses' => 'EntelController@create']);
 	Route::post('entel/register/XLSX',['as' => 'entel.store','uses' => 'EntelController@store']);
 	//GPS

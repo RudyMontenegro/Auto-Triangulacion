@@ -62,7 +62,7 @@
                   </div>
             
 
-                  <a href="{{ url('#') }}" class="btn btn-sm btn-danger" id="crearImagen">Siguiente</a>
+                  <a href="{{ url('entel/informe/registro') }}" class="btn btn-sm btn-success float-right">Siguiente</a>
               </div>
             </div>
           </div>
