@@ -1,6 +1,18 @@
 @extends('layouts.app', ['page' => __('ENTEL'), 'pageSlug' => 'icons'])
 @section('content')
 
+  <style>
+    
+    
+   th, td {
+      width: 2%;
+      text-align: left;
+      vertical-align: top;
+      text-align: center;
+      background: linear-gradient(100deg, #4F94F8, rgb(27, 106, 255));
+      border: 1px solid #000;
+   }
+  </style>
 
 <div class="row justify-content-center">
     <div class="col-md-10">
@@ -14,30 +26,37 @@
               <div class="col-md-10">
                   <div class="card">
 
-                
-                      @for ($i = 0; $i < $cant; $i++)
-                          @for ($j = 0; $j < count($lista[$i]) ; $j++)
-                            
-                             {{$lista[$i][$j]->identificador}}
-                            
-                          @endfor
-                          
-                      </br>
-                      </div>
+                   <table class="table">
+                      <tbody>
+                            <tr>
+                      @for ($i = 1; $i <= count($nuevo) ; $i++)
+                          @if ($i % 7 != 0)
+                              
+                                <td ><a class="text-white" href="/entel/informe/registro/{{$registro}}/{{$nuevo[$i-1]}}"><b>{{$nuevo[$i-1]}}</b></a></td>
+                              
+                          @else
+                                <td ><a class="text-white" href="/entel/informe/registro/{{$registro}}/{{$nuevo[$i-1]}}"><b>{{$nuevo[$i-1]}}</b></a></td>
+                              </tr>
+                            <tr>
+                          @endif
+                       
                       @endfor
+                        
+                      </tbody>
+                    </table>
+                   
+
+                      </div>
+
+                      <a href="{{ url('/entel/informe/registro') }}"  class="btn btn-sm btn-danger float-left" >Atras</a>
                     </div>
-                  
-                  
+                
                   </div>
-                  <a href="{{ url('entel/register/XLSX/view') }}" class="btn btn-sm btn-danger float-left">Atras</a>
-                  <a href="{{ url('entel/informe') }}" class="btn btn-sm btn-success float-right">Siguiente</a>
+                 
               </div>
             </div>
           </div>
         </div>
-    </div>
-    
-      </div>
     
 
 @endsection
