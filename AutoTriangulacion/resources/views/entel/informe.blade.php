@@ -32,10 +32,10 @@
                       @for ($i = 1; $i <= count($nuevo) ; $i++)
                           @if ($i % 7 != 0)
                               
-                                <td ><a class="text-white" href="/entel/informe/registro/{{$registro}}/{{$nuevo[$i-1]}}"><b>{{$nuevo[$i-1]}}</b></a></td>
+                                <td ><a class="text-white" href="/entel/informe/registro/{{$registro}}/{{$filtrado}}/{{$nuevo[$i-1]}}"><b>{{$nuevo[$i-1]}}</b></a></td>
                               
                           @else
-                                <td ><a class="text-white" href="/entel/informe/registro/{{$registro}}/{{$nuevo[$i-1]}}"><b>{{$nuevo[$i-1]}}</b></a></td>
+                                <td ><a class="text-white" href="/entel/informe/registro/{{$registro}}/{{$registro}}/{{$nuevo[$i-1]}}"><b>{{$nuevo[$i-1]}}</b></a></td>
                               </tr>
                             <tr>
                           @endif
@@ -48,7 +48,7 @@
 
                       </div>
 
-                      <a href="{{ url('/entel/informe/registro') }}"  class="btn btn-sm btn-danger float-left" >Atras</a>
+                      <a href="/entel/informe/registro/{{$registro}}"  class="btn btn-sm btn-danger float-left" >Atras</a>
                     </div>
                 
                   </div>

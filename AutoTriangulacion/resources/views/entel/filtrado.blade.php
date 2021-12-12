@@ -3,6 +3,7 @@
 
   <style>
     
+    
    th, td {
       width: 2%;
       text-align: left;
@@ -14,11 +15,13 @@
   </style>
 
 <div class="row justify-content-center">
-    <div class="col-md-10">
+    
+    <div class="col-md-10"> <a href="/entel/informe/registros/pdf/{{$registro}}" class="btn btn-sm btn-warning float-right" >PDF</a>
         <div class="card">
           <div class="card-header">
-            <h4 class="card-title text-center"><b>REGISTRO DE FLUJO DE LLAMADAS</b></h4>
+            <h4 class="card-title text-center"><b>FILTRADO DE NUMEROS IMPLICADOS DEL REGISTRO FLUJO DE LLAMADAS DE {{$registro}}</b></h4>
           </div>
+         
           <div class="card-body">
             
             <div class="row justify-content-center">
@@ -30,10 +33,10 @@
                             <tr>
                         @for ($i = 1; $i <= count($lista) ; $i++)
                         
-                            @if ($i % 7 != 0)
+                            @if ($i % 4 != 0)
                                   
                                   <td>
-                                  <a class="text-white" type="button"  href="registro/{{$lista[$i-1]['identificador']}}">
+                                  <a class="text-white" type="button"  href="/entel/informe/registro/{{$registro}}/{{$lista[$i-1]['identificador']}}">
                                   <b>{{$lista[$i-1]['identificador']}}
                                     <br>
                                     @if ($lista[$i-1]['nombre'] != "vacio")
@@ -45,7 +48,7 @@
                                 
                             @else
                                       <td>
-                                      <a class="text-white" type="button"  href="registro/{{$lista[$i-1]['identificador']}}">
+                                      <a class="text-white" type="button"  href="/entel/informe/registro/{{$registro}}/{{$lista[$i-1]['identificador']}}">
                                       <b>{{$lista[$i-1]['identificador']}}
                                         <br>
                                         @if ($lista[$i-1]['nombre'] != "vacio")
@@ -66,8 +69,7 @@
 
                       </div>
 
-                      <a href="{{ url('entel/register/XLSX/view') }}"  class="btn btn-sm btn-danger float-left" >Atras</a>
-                      <a href="{{ url('entel/informe/GPS') }}" class="btn btn-sm btn-success float-right">Siguiente</a>
+                      <a href="{{ url('entel/informe/registro') }}"  class="btn btn-sm btn-danger float-left" >Atras</a>
                     </div>
                 
                   </div>

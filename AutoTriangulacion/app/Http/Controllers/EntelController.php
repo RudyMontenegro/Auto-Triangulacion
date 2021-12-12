@@ -7,8 +7,9 @@ use App\excelModel;
 use FarhanWazir\GoogleMaps\GMaps;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel as Ex;
-
+use PDF;
 use function Complex\add;
 
 class EntelController extends Controller
@@ -150,8 +151,180 @@ class EntelController extends Controller
         return view('entel.registro', compact('lista'));
     }
 
-    public function informeFecha(entel $viva, $registro, $fecha)
+    public function informeCoincidencia(entel $viva, $registro)
     {
+            $vertical = DB::table('entels')             //contar arreglo con count($vertical)
+                        ->select('numero_usuario')
+                        ->get();
+
+            $horizontal = DB::table('excels')           //contar arreglo con count($horizontal)
+                        ->select('identificador')
+                        ->groupBy('identificador')
+                        ->get();
+
+            $Matriz = new entel();
+            $Matriz = $Matriz->matriz();
+
+
+            $temp = [];
+            
+
+            for ($i=1; $i < count($vertical)+1 ; $i++) { 
+                
+                for ($j=0; $j < count($horizontal)+1 ; $j++) { 
+ 
+
+                    if ($Matriz[0][$j] == $registro && $Matriz[$i][$j] == 1 ) {
+                      
+                            $consulta = $Matriz[$i][0];
+                                array_push($temp, $consulta);
+                    }
+                       
+
+                }
+            }
+            $lista = [];
+
+            foreach ($temp as $registros) {
+                $nombre = DB::table('entels')             
+                        ->select('nombre')
+                        ->where('numero_usuario','=',$registros)
+                        ->exists(); 
+                        
+                if ($nombre) {
+                    $nombres = DB::table('entels')             
+                        ->select('nombre')
+                        ->where('numero_usuario','=',$registros)
+                        ->first();
+                        
+                        $datos = [
+                            "nombre" => $nombres->nombre,
+                            "identificador" => $registros,
+                        ];
+                        
+                }else{
+    
+                    $datos = [
+                        'nombre' => "vacio",
+                        'identificador' => $registros,
+                    ];
+    
+                }
+                array_push($lista, $datos);
+    
+            }  
+            
+            
+            return view('entel.filtrado', compact('lista','registro'));
+
+            /*  ESTA FUNCION DEVULVE REGISTROS YA FILTRADOS
+            $lista = [];
+            
+
+            for ($i=1; $i < count($vertical)+1 ; $i++) { 
+                
+                for ($j=0; $j < count($horizontal)+1 ; $j++) { 
+
+                    
+                    $temp = [];  
+
+                    if ($Matriz[0][$j] == $registro && $Matriz[$i][$j] == 1 ) {
+                      
+                            $consulta1 = DB::table('excels')
+                                    ->select('*')
+                                    ->where('identificador','=',$registro)
+                                    ->where('numeroA','=',$Matriz[$i][0])
+                                    ->orWhere('numeroB','=',$Matriz[$i][0])
+                                    ->get();
+                                
+                            foreach ($consulta1 as $aux1) {
+                                array_push($temp, $aux1);
+                            }
+
+                            
+                            
+                            array_push($lista, $temp);
+                        }
+                       
+
+                }
+            }
+
+            dd($lista);
+            */
+
+
+
+    }
+
+    public function informeFiltrado(entel $viva, $registro, $filtrado)
+    {
+        $vertical = DB::table('entels')             //contar arreglo con count($vertical)
+                        ->select('numero_usuario')
+                        ->get();
+
+            $horizontal = DB::table('excels')           //contar arreglo con count($horizontal)
+                        ->select('identificador')
+                        ->groupBy('identificador')
+                        ->get();
+
+            $Matriz = new entel();
+            $Matriz = $Matriz->matriz();
+
+            $lista = [];
+            
+
+            for ($i=1; $i < count($vertical)+1 ; $i++) { 
+                
+                for ($j=0; $j < count($horizontal)+1 ; $j++) { 
+
+
+                    if ($Matriz[0][$j] == $registro && $Matriz[$i][$j] == 1 ) {
+                      
+                            
+
+                            $consulta2 = DB::table('excels')
+                                    ->select('*')
+                                    ->where('identificador','=',$registro)
+                                    ->where('numeroA','=',$filtrado)
+                                    ->get();
+                                
+                            foreach ($consulta2 as $aux1) {
+                                array_push($lista, $aux1->fecha);
+                            }
+                            $consulta1 = DB::table('excels')
+                                    ->select('*')
+                                    ->where('identificador','=',$registro)
+                                    ->Where('numeroB','=',$filtrado)
+                                    ->get();
+                                
+                            foreach ($consulta1 as $aux1) {
+                                array_push($lista, $aux1->fecha);
+                            }
+                        }
+                }
+            }
+            
+            $fecha = [];
+
+            foreach ($lista as $fechas) {
+                array_push($fecha, substr($fechas, 0, -9));
+            }
+    
+            $fecha = array_unique($fecha);
+    
+            $nuevo = [];
+            foreach ($fecha as $fecha) {
+                array_push($nuevo, $fecha);
+            }
+
+            return view('entel.informe',compact('nuevo','registro','filtrado'));
+
+    }
+
+    public function informeFecha(entel $viva, $registro, $filtrado ,$fecha)
+    {
+       
         $fecha_inicial = $fecha . ' 00:00:00';
         $fecha_fin= $fecha . ' 23:59:59';
 
@@ -164,43 +337,8 @@ class EntelController extends Controller
                             ->groupBy('identificador')
                             ->get();
 
-            $Matriz[0][0] = 0;
-
-            for ($i=1; $i < count($vertical)+1 ; $i++) { 
-                for ($j=0; $j < count($horizontal)+1 ; $j++) { 
-
-                    if ($j==0) {
-                        $Matriz[$i][0] = $vertical[$i-1]->numero_usuario;
-                    }else{
-                        $Matriz[$i][$j]=0;
-                    }
-                   
-                }
-            }
-
-
-            for ($i=0; $i < count($horizontal) ; $i++) { 
-                $Matriz[0][$i+1] = $horizontal[$i]->identificador;
-            }
-
-            for ($i=1; $i < count($vertical)+1 ; $i++) { 
-                for ($j=1; $j < count($horizontal)+1 ; $j++) { 
-
-                    $consulta = DB::table('excels')
-                                ->select('*')
-                                ->where('numeroA','=',$Matriz[$i][0])
-                                ->orWhere('numeroB','=',$Matriz[$i][0])
-                                ->exists();
-
-                    if($consulta){
-
-                        $Matriz[$i][$j] = 1;
-                    }else{
-                        $Matriz[$i][$j] = 0;
-                    }
-                }
-             
-            }
+            $Matriz = new entel();
+            $Matriz = $Matriz->matriz();
 
             $lista = [];
             
@@ -213,7 +351,7 @@ class EntelController extends Controller
                     $temp = [];  
                     if ($Matriz[$i][$j] == 1) {
                       
-                        if ($Matriz[0][$j] == $registro) {
+                        if ($Matriz[0][$j] == $registro && $Matriz[$i][0] == $filtrado) {
                             $consulta = DB::table('excels')
                                     ->select('*')
                                     ->where('identificador','=',$registro)
@@ -221,6 +359,7 @@ class EntelController extends Controller
                                     ->where('fecha', '<=' ,$fecha_fin)
                                     ->where('tiempo', '<>' ,'-')
                                     ->get();
+
                             
                             foreach ($consulta as $aux1) {
                                 array_push($temp, $aux1);
@@ -285,7 +424,8 @@ class EntelController extends Controller
                 array_push($nuevo, $temp);
                
             }
-        return view('entel.fecha', compact('nuevo','cant','registro'));
+
+        return view('entel.fecha', compact('nuevo','cant','registro','filtrado'));
     }
 
     public function informe(entel $viva, $registro)
@@ -632,10 +772,14 @@ class EntelController extends Controller
         
     }
 
-    public function gps(entel $entel)
-    {
+    public function gps(entel $entel, $registro, $filtrado, $fecha, $coordenada,$id)
+    {   
+        /*
+        $pos = strpos($coordenada, ',');
 
-
+        $a = substr($coordenada, 0, -$pos-1);
+        $b = substr($coordenada, $pos+1);
+        
         $coordenadasA = DB::table('excels')
                         ->select('coordenadaA')
                         ->where('coordenadaA','<>','-')
@@ -676,35 +820,249 @@ class EntelController extends Controller
             }
                 
         }
+    */
+        $a = substr($id, 0, -9);
+        $hora = substr($id, 1);
 
-        /*
-        $gmapconfig['center'] = '-17.012306, -65.058917';
+        $aux = $fecha . $hora;
+ 
+
+        if ($a == 1) {
+            
+            $nombre = DB::table('excels')
+                    ->select('radio_baseA')
+                    ->where('identificador','=', $registro)
+                    ->where('fecha','=', $aux)
+                    ->where('radio_baseA','<>', '-')
+                    ->first();
+            $nombre = $nombre->radio_baseA;
+        }else {
+            $nombre = DB::table('excels')
+                    ->select('radio_baseB')
+                    ->where('identificador','=', $registro)
+                    ->where('fecha','=', $aux)
+                    ->where('radio_baseB','<>', '-')
+                    ->first();
+            $nombre = $nombre->radio_baseB;
+        }
+        
+        
+
+        $gmapconfig['center'] = $coordenada;
         $gmapconfig['zoom'] = '14';
         $gmapconfig['map_height'] = '500px';
         $gmapconfig['map_type'] = 'SATELLITE';
+
         $gmapconfig['scrollwheel'] = false;
-        $gmapconfig['disableDefaultUI'] = true;
+        //$gmapconfig['disableDefaultUI'] = true;
+        
 
         //GMaps::initialize($config);
         $livegooglemap = new GMaps();
         $livegooglemap->initialize($gmapconfig);
+
         
-        $marker['position'] = '-17.012306, -65.058917';
-        $marker['infowindow_content'] = 'dddddd';
+        $marker['position'] = $coordenada;
+
+        $circle['center'] = $coordenada;
+        $circle['radius'] = '2000';
+        $circle['strokeColor'] = 'rgb(163, 228, 215)';
+        $circle['fillColor'] = true;
+
         //$marker['icon'] = 'https://chart.googleapis.com/chart?chst=d_map_xpin_icon&chld=pin';
 
         //https://chart.googleapis.com/chart?chst=d_bubble_icon_text_small&chld=ski|bb|Wheeee!|FFFFFF|000000
 
         $livegooglemap->add_marker($marker);
+        $livegooglemap->add_circle($circle);
         $map = $livegooglemap->create_map();
-        
-        */
-
-        
-//dd($var);
-        return view('entel.location',compact('final'));
+   
+        //dd($var);
+        return view('entel.location',compact('map','registro','filtrado','fecha','nombre'));
     }
 
+
+    public function printPDF(entel $entel, $registro){
+
+        //IMPRIMIR TABLA
+
+           $vertical = DB::table('entels')             //contar arreglo con count($vertical)
+                            ->select('numero_usuario')
+                            ->get();
+
+            $horizontal = DB::table('excels')           //contar arreglo con count($horizontal)
+                            ->select('identificador')
+                            ->groupBy('identificador')
+                            ->get();
+
+            $Matriz[0][0] = 0;
+
+            for ($i=1; $i < count($vertical)+1 ; $i++) { 
+                for ($j=0; $j < count($horizontal)+1 ; $j++) { 
+
+                    if ($j==0) {
+                        $Matriz[$i][0] = $vertical[$i-1]->numero_usuario;
+                    }else{
+                        $Matriz[$i][$j]=0;
+                    }
+                   
+                }
+            }
+
+
+            for ($i=0; $i < count($horizontal) ; $i++) { 
+                $Matriz[0][$i+1] = $horizontal[$i]->identificador;
+            }
+
+
+            for ($i=1; $i < count($vertical)+1 ; $i++) { 
+                for ($j=1; $j < count($horizontal)+1 ; $j++) { 
+
+                    $consulta = DB::table('excels')
+                                ->select('*')
+                                ->where('identificador','=',$Matriz[0][$j])
+                                ->orWhere('numeroA','=',$Matriz[$i][0])
+                                ->orWhere('numeroB','=',$Matriz[$i][0])
+                                ->exists();
+
+                    if($consulta){
+
+                        $aux1 = DB::table('excels')
+                                ->select('numeroA')
+                                ->where('identificador','=',$Matriz[0][$j])
+                                ->Where('numeroA','=',$Matriz[$i][0])
+                                ->count();
+
+                                
+                        $aux2 = DB::table('excels')
+                                ->select('numeroB')
+                                ->where('identificador','=',$Matriz[0][$j])
+                                ->Where('numeroB','=',$Matriz[$i][0])
+                                ->count();
+
+                        $Matriz[$i][$j] = $aux1+$aux2;
+                    }else{
+                        $Matriz[$i][$j] = 0;
+                    }
+                }
+             
+            }
+            $v = count($vertical)+1;
+            $h= count($horizontal)+1;
+
+
+        //IMPRIMIR INFORME
+
+        $lista = [];
+            
+
+            for ($i=1; $i < count($vertical)+1 ; $i++) { 
+                
+                for ($j=1; $j < count($horizontal)+1 ; $j++) { 
+
+                    
+                    $temp = [];  
+                    if ($Matriz[$i][$j] > 1) {
+                        
+                        if ($Matriz[0][$j] == $registro ) {
+
+                            $consulta = DB::table('excels')
+                                    ->select('*')
+                                    ->where('identificador','=',$registro)
+                                    ->where('tiempo', '<>' ,'-')
+                                    ->get();
+                    
+                            
+                            foreach ($consulta as $aux1) {
+
+                                if ($aux1->numeroA == $Matriz[$i][0] || $aux1->numeroB == $Matriz[$i][0]) {
+                                    array_push($temp, $aux1);
+                                }
+                                
+                            }
+
+                            
+                            
+                            array_push($lista, $temp);
+                        }
+                        
+                    }
+
+                }
+            }
+
+
+            $nuevo = [];
+            $cant = 0;
+
+            for ($i=0; $i < count($lista); $i++) { 
+                $temp = [];
+                for ($j=0; $j < count($lista[$i])-1; $j++) { 
+                    
+                    $a = $j+1;
+                    if (($lista[$i][$j]->tiempo == $lista[$i][$a]->tiempo || $lista[$i][$j]->fecha == $lista[$i][$a]->fecha) && $lista[$i][$j]->llamada == "ENTRANTE") {
+                        
+                        if ($lista[$i][$j]->radio_baseB == '-') {
+                            $lista[$i][$j]->radio_baseB = $lista[$i][$a]->radio_baseB;
+                            $lista[$i][$j]->coordenadaB = $lista[$i][$a]->coordenadaB;
+                        } else {
+                            $lista[$i][$j]->radio_baseA = $lista[$i][$a]->radio_baseA;
+                            $lista[$i][$j]->coordenadaA = $lista[$i][$a]->coordenadaA;
+                        }
+                        
+                        //unset($lista[$i][$a]); 
+                        array_push($temp, $lista[$i][$j]);
+                        
+                         $j = $j+1;
+                    } else {
+                        if (($lista[$i][$j]->tiempo == $lista[$i][$a]->tiempo || $lista[$i][$j]->fecha == $lista[$i][$a]->fecha) && $lista[$i][$j]->llamada == "SALIENTE") {
+                         
+                            if ($lista[$i][$j]->radio_baseB == '-') {
+                                $lista[$i][$j]->radio_baseB = $lista[$i][$a]->radio_baseB;
+                                $lista[$i][$j]->coordenadaB = $lista[$i][$a]->coordenadaB;
+                            } else {
+                                $lista[$i][$j]->radio_baseA = $lista[$i][$a]->radio_baseA;
+                                $lista[$i][$j]->coordenadaA = $lista[$i][$a]->coordenadaA;
+                            }
+                              
+                            //unset($lista[$i][$a]); 
+                            array_push($temp, $lista[$i][$j]);
+                            $j = $j+1;
+                             
+                        } else {
+                                array_push($temp, $lista[$i][$j]);
+                                
+                        }
+                        
+                    }
+                    
+                }
+                $cant = $cant+1;
+                array_push($nuevo, $temp);
+               
+            }
+
+
+        //imprimir mapa
+
+       set_time_limit(300);
+
+       $sLat = '-17.012306';
+       $sLong = '-65.058917';
+       $image = file_get_contents('http://maps.googleapis.com/maps/api/staticmap?key=AIzaSyD3T_I3XRvnKbXL4ppS9boJpphoyh0igiw&center='
+       . $sLat. ",". $sLong
+       . '&maptype=hybrid'
+       .'&zoom=14&size=600x400&markers=size:tiny|color:red|'
+       . $sLat. ",". $sLong);
+
+       
+       Storage::disk('print')->put('mapaPrueba'.'.jpg', $image);
+
+       $pdf = \PDF::loadView('entel.pdfFlujo',compact('Matriz', 'v' , 'h','nuevo','cant'));
    
+        return $pdf->setPaper('a4', 'landscape')
+                   ->stream('entel.pdf');
+
+   }
 
 }

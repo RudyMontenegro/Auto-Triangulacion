@@ -8,7 +8,7 @@
     <div class="col-md-10">
         <div class="card">
           <div class="card-header">
-            <h4 class="card-title text-center">Radio Bases</h4>
+            <h4 class="card-title text-center">Radio Base {{$nombre}}</h4>
           </div>
           <div class="card-body">
             
@@ -18,16 +18,14 @@
                           
                           <div class="text-center">
 
-                              @foreach ($final as $final)
-                                {{ $final->radio_base}}
-                                {{ $final->coordenada}}
-                                <br>
-                              @endforeach
+                            {!! $map['js'] !!}
+                              {!! $map['html'] !!}
 
                             
-                           
                           </div>
+                        
                   </div>
+                  <a href="/entel/informe/registro/{{$registro}}/{{$filtrado}}/{{$fecha}}"  class="btn btn-sm btn-danger float-left" >Atras</a>
               </div>
             </div>
           </div>
