@@ -85,7 +85,7 @@
                         <ul style= "list-style-type: square;"><li>
                         <h4 align = "justify">EN FECHA {{$a}} a horas {{$b}} el usuario del número {{$nuevo[$i][$j]->numeroA}} @if ($nombreA != 'vacio')registrado a nombre de {{$nombreA}}, @else con datos de usuario desconocido @endif 
                           <b>intenta</b> tomar contacto (llamada perdida),  @if ($nuevo[$i][$j]->radio_baseA != '-')
-                          empleando la radio base <a href="/entel/informe/registro/{{$registro}}/{{$filtrado}}/{{$a}}/{{$nuevo[$i][$j]->coordenadaA}}/{{1 ,$b}}">{{$nuevo[$i][$j]->radio_baseA}}</a>, @else empleando una radio base DESCONOCIDA, @endif al número {{$nuevo[$i][$j]->numeroB}} 
+                          empleando la radio base <a href="/entel/informe/registro/{{$registro}}/{{$filtrado}}/{{$a}}/{{$nuevo[$i][$j]->coordenadaA}}/{{1 .$b}}">{{$nuevo[$i][$j]->radio_baseA}}</a>, @else empleando una radio base DESCONOCIDA, @endif al número {{$nuevo[$i][$j]->numeroB}} 
                           @if ($nombreB != 'vacio')registrado a nombre de {{$nombreB}}, @else con datos de usuario desconocido @endif , @if ($nuevo[$i][$j]->radio_baseB == '-')
                           para este último empleó una radio base DESCONOCIDA.@else para este último empleó una radio base <a href="/entel/informe/registro/{{$registro}}/{{$filtrado}}/{{$a}}/{{$nuevo[$i][$j]->coordenadaB}}/{{2 .$b}}">{{$nuevo[$i][$j]->radio_baseB}}</a>.@endif
                       </h4></li></ul>

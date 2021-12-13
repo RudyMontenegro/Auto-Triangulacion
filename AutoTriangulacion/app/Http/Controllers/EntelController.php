@@ -165,7 +165,6 @@ class EntelController extends Controller
             $Matriz = new entel();
             $Matriz = $Matriz->matriz();
 
-
             $temp = [];
             
 
@@ -183,6 +182,8 @@ class EntelController extends Controller
 
                 }
             }
+
+            
             $lista = [];
 
             foreach ($temp as $registros) {
@@ -213,7 +214,6 @@ class EntelController extends Controller
                 array_push($lista, $datos);
     
             }  
-            
             
             return view('entel.filtrado', compact('lista','registro'));
 
@@ -259,6 +259,7 @@ class EntelController extends Controller
 
     public function informeFiltrado(entel $viva, $registro, $filtrado)
     {
+        
         $vertical = DB::table('entels')             //contar arreglo con count($vertical)
                         ->select('numero_usuario')
                         ->get();
@@ -282,25 +283,19 @@ class EntelController extends Controller
                     if ($Matriz[0][$j] == $registro && $Matriz[$i][$j] == 1 ) {
                       
                             
+                             $consulta = DB::table('excels')
+                                    ->select('*')
+                                    ->where('identificador','=',$registro)
+                                    ->get();
+                                  
 
-                            $consulta2 = DB::table('excels')
-                                    ->select('*')
-                                    ->where('identificador','=',$registro)
-                                    ->where('numeroA','=',$filtrado)
-                                    ->get();
-                                
-                            foreach ($consulta2 as $aux1) {
-                                array_push($lista, $aux1->fecha);
+                      
+                            foreach ($consulta as $aux) {
+                                if ($aux->numeroA == $filtrado || $aux->numeroB == $filtrado) {
+                                    array_push($lista, $aux->fecha);
+                                } 
                             }
-                            $consulta1 = DB::table('excels')
-                                    ->select('*')
-                                    ->where('identificador','=',$registro)
-                                    ->Where('numeroB','=',$filtrado)
-                                    ->get();
-                                
-                            foreach ($consulta1 as $aux1) {
-                                array_push($lista, $aux1->fecha);
-                            }
+
                         }
                 }
             }

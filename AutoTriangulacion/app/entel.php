@@ -44,10 +44,15 @@ class entel extends Model
                                 ->select('*')
                                 ->where('identificador','=',$Matriz[0][$j])
                                 ->where('numeroA','=',$Matriz[$i][0])
-                                ->orWhere('numeroB','=',$Matriz[$i][0])
                                 ->exists();
 
-                    if($consulta){
+                    $consulta1 = DB::table('excels')
+                                ->select('*')
+                                ->where('identificador','=',$Matriz[0][$j])
+                                ->where('numeroB','=',$Matriz[$i][0])
+                                ->exists();
+
+                    if($consulta || $consulta1){
 
                         $Matriz[$i][$j] = 1;
                     }else{
