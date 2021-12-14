@@ -65,5 +65,9 @@
 
     @include('entel.informe.informe')
 
+    <div style="page-break-after:always;"></div> 
+
+    @include('entel.informe.radiobase')
+
 </body>
 </html>
