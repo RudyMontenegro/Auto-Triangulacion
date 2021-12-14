@@ -746,6 +746,8 @@ class EntelController extends Controller
                                 ->count();
 
                         $Matriz[$i][$j] = $aux1+$aux2;
+
+                        
                     }else{
                         $Matriz[$i][$j] = 0;
                     }
@@ -1040,7 +1042,7 @@ class EntelController extends Controller
 
         //imprimir mapa
 
-       set_time_limit(300);
+       set_time_limit(500);
 
        $sLat = '-17.012306';
        $sLong = '-65.058917';
