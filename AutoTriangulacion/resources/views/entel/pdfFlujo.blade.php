@@ -35,7 +35,7 @@
 <header>
       <p><strong>REGISTRO de GEOLOCALIZACION</strong></p>
 
-      <img src="{{ public_path('/PDF/mapaPrueba.jpg') }}" width="900px">
+      
        
 
  </header>
@@ -70,6 +70,14 @@
                                     @endif        
                                 @endfor
                             </tr>
+                            @if ($i % 7 == 0 && $i > 0)
+                                </tr>
+                                <div style="page-break-after:always;"></div>
+                                <th></th>
+                                <th></th>
+                                <tr>
+                            @endif
+
                             @endfor
                          
                         </tbody>
@@ -119,8 +127,6 @@
                     }     
                     
                     
-                    
-                    
                 ?>
              
                 
@@ -144,11 +150,40 @@
             @endif
         @endfor
         <br>
+        <div style="page-break-after:always;"></div> 
        @endfor
-        
+       
 
     </body>
 
+        @for ($i = 0; $i < $contador; $i++)
+       
+                    <table class="table table-light">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>RADIO BASE {{$radioBase[$i][0]}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                             
+                        @for ($j = 1; $j < count($radioBase[$i]); $j++)    
+                           <tr>
+                                <td>{{$radioBase[$i][$j]}}</td>
+                            </tr>
+                        @endfor
+                            
+                        </tbody>
+                    </table>
+
+                    <img src="{{ public_path('/PDF/'.$i.'.jpg') }}" width="900px">
+                    <div style="page-break-after:always;"></div>
+
+        @endfor
+        
+ 
+
+        
+   
     
 
 </html>

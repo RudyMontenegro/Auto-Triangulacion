@@ -986,12 +986,13 @@ class EntelController extends Controller
                 }
             }
 
-
+            $coordenadas = [];
             $nuevo = [];
             $cant = 0;
 
             for ($i=0; $i < count($lista); $i++) { 
                 $temp = [];
+                $aux = [];
                 for ($j=0; $j < count($lista[$i])-1; $j++) { 
                     
                     $a = $j+1;
@@ -1009,6 +1010,15 @@ class EntelController extends Controller
                         array_push($temp, $lista[$i][$j]);
                         
                          $j = $j+1;
+
+                        if (!in_array($lista[$i][$j]->coordenadaA, $coordenadas) ) {
+                            array_push($coordenadas, $lista[$i][$j]->coordenadaA);
+                        }
+                        if (!in_array($lista[$i][$j]->coordenadaB, $coordenadas)) {
+                            array_push($coordenadas, $lista[$i][$j]->coordenadaB);
+                        }
+                       
+
                     } else {
                         if (($lista[$i][$j]->tiempo == $lista[$i][$a]->tiempo || $lista[$i][$j]->fecha == $lista[$i][$a]->fecha) && $lista[$i][$j]->llamada == "SALIENTE") {
                          
@@ -1023,10 +1033,16 @@ class EntelController extends Controller
                             //unset($lista[$i][$a]); 
                             array_push($temp, $lista[$i][$j]);
                             $j = $j+1;
+
+                            if (!in_array($lista[$i][$j]->coordenadaA, $coordenadas) ) {
+                                array_push($coordenadas, $lista[$i][$j]->coordenadaA);
+                            }
+                            if (!in_array($lista[$i][$j]->coordenadaB, $coordenadas)) {
+                                array_push($coordenadas, $lista[$i][$j]->coordenadaB);
+                            }
                              
                         } else {
                                 array_push($temp, $lista[$i][$j]);
-                                
                         }
                         
                     }
@@ -1036,24 +1052,78 @@ class EntelController extends Controller
                 array_push($nuevo, $temp);
                
             }
+        
+        
+        //OBTENCION DE NOMBRES DE RADIOS BASES
+        $radioBase = [];
+        
+        foreach ($coordenadas as $coordenadass) {
+            if ($coordenadass != '-') {
 
+                $lista = DB::table('excels')
+                        ->select('*')
+                        ->where('identificador','=',$registro)
+                        ->get();
+                $coor = [];
+                foreach ($lista as $lista) {
+                    
+                    if ($lista->coordenadaA == $coordenadass) {
+                        array_push( $coor, $lista->radio_baseA);
+                        array_push($coor, $coordenadass);
+                        
+                    }else{
+                        if ($lista->coordenadaB == $coordenadass) {
+                            array_push($coor, $lista->radio_baseB);
+                            array_push($coor, $coordenadass);
+                            
+                        }
+                    }
+                }
 
+                $vacio = [];
+                $coor = array_unique($coor);
+                foreach ($coor as $coors) {
+                    $a = substr($coors, 0, 1);
+                    if ($a == '-') {
+                        array_unshift($vacio, $coors);
+                    }else{
+                        array_push($vacio, $coors);
+                    }
+                    
+                }
+                
+                array_push($radioBase, $vacio);
+            }
+        }    
+
+        
         //imprimir mapa
 
-       set_time_limit(300);
-
-       $sLat = '-17.012306';
-       $sLong = '-65.058917';
-       $image = file_get_contents('http://maps.googleapis.com/maps/api/staticmap?key=AIzaSyD3T_I3XRvnKbXL4ppS9boJpphoyh0igiw&center='
-       . $sLat. ",". $sLong
-       . '&maptype=hybrid'
-       .'&zoom=14&size=600x400&markers=size:tiny|color:red|'
-       . $sLat. ",". $sLong);
-
+       set_time_limit(300); 
        
-       Storage::disk('print')->put('mapaPrueba'.'.jpg', $image);
+       $contador = 0;
+       for ($i=0; $i < count($coordenadas); $i++) { 
+            if ($coordenadas[$i] != '-') {
+                $pos = strpos($coordenadas[$i], ',');
+                $a = substr($coordenadas[$i], 0, $pos);
+                $b = substr($coordenadas[$i], $pos+1);
+                
+                $sLat = $a;
+                $sLong = $b;
+                $image = file_get_contents('http://maps.googleapis.com/maps/api/staticmap?key=AIzaSyD3T_I3XRvnKbXL4ppS9boJpphoyh0igiw&center='
+                . $sLat. ",". $sLong
+                . '&maptype=hybrid'
+                .'&zoom=4&size=600x400'
+                .'&markers=size:tiny|color:red|'
+                . $sLat. ",". $sLong);
 
-       $pdf = \PDF::loadView('entel.pdfFlujo',compact('Matriz', 'v' , 'h','nuevo','cant'));
+                
+                Storage::disk('print')->put($contador.'.jpg', $image);
+                $contador = $contador+1;
+            }
+       }
+
+       $pdf = \PDF::loadView('entel.pdfFlujo',compact('Matriz', 'v' , 'h','nuevo','cant','coor','contador','registro','radioBase'));
    
         return $pdf->setPaper('a4', 'landscape')
                    ->stream('entel.pdf');
