@@ -61,6 +61,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('entel/register',['as' => 'entel.create','uses' => 'EntelController@create']);
 	Route::post('entel/register/XLSX',['as' => 'entel.store','uses' => 'EntelController@store']);
 	//IMPRIMIR
+	Route::get('entel/informe/registros/pdf',['as' => 'entel.printTotal','uses' => 'EntelController@printTotal']);
 	Route::get('entel/informe/registros/pdf/{registro}',['as' => 'entel.printPDF','uses' => 'EntelController@printPDF']);
 	//GPS
 	Route::get('entel/informe/registro/{registro}/{filtrado}/{fecha}/{coordenada}/{id}',['as' => 'entel.gps','uses' => 'EntelController@gps']);
