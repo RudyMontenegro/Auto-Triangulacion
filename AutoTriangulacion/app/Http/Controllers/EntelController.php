@@ -365,15 +365,12 @@ class EntelController extends Controller
                                     ->where('numeroB', '=' ,$filtrado)
                                     ->get();
                             
-                            if (empty($consultaB)) {
                                 foreach ($consultaB as $aux1) {
                                     array_push($temp, $aux1);
                                 }
-                            }else{
                                 foreach ($consultaA as $aux1) {
                                     array_push($temp, $aux1);
                                 }
-                            }     
                             
 
                             
