@@ -1,12 +1,13 @@
-@for ($i = 0; $i < $contador; $i++)
+<div class="container">
+    @for ($i = 0; $i < $contador; $i++)
        
-                    <table class="table table-light">
-                        <thead class="thead-light">
-                            <tr>
-                                <th>RADIO BASE {{$radioBase[$i][0]}}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+            <table class="table table-light text-center">
+                 <thead class="thead-light">
+                    <tr>
+                        <th class="text-center">RADIO BASE {{$radioBase[$i][0]}}</th>
+                        </tr>
+                    </thead>
+                    <tbody> 
                              
                         @for ($j = 1; $j < count($radioBase[$i]); $j++)    
                            <tr>
@@ -14,10 +15,11 @@
                             </tr>
                         @endfor
                             
-                        </tbody>
-                    </table>
+                    </tbody>
+            </table>
 
-                    <img src="{{ public_path('/PDF/'.$i.'.jpg') }}" width="900px">
-                    <div style="page-break-after:always;"></div>
+                <img src="{{ public_path('/PDF/'.$i.'.jpg') }}" width="900px">
+                 <div style="page-break-after:always;"></div>
 
-        @endfor
+@endfor
+</div>
