@@ -347,18 +347,34 @@ class EntelController extends Controller
                     if ($Matriz[$i][$j] == 1) {
                       
                         if ($Matriz[0][$j] == $registro && $Matriz[$i][0] == $filtrado) {
-                            $consulta = DB::table('excels')
+                            $consultaA = DB::table('excels')
                                     ->select('*')
                                     ->where('identificador','=',$registro)
                                     ->where('fecha', '>=' ,$fecha_inicial)
                                     ->where('fecha', '<=' ,$fecha_fin)
                                     ->where('tiempo', '<>' ,'-')
+                                    ->where('numeroA', '=' ,$filtrado)
                                     ->get();
 
+                            $consultaB = DB::table('excels')
+                                    ->select('*')
+                                    ->where('identificador','=',$registro)
+                                    ->where('fecha', '>=' ,$fecha_inicial)
+                                    ->where('fecha', '<=' ,$fecha_fin)
+                                    ->where('tiempo', '<>' ,'-')
+                                    ->where('numeroB', '=' ,$filtrado)
+                                    ->get();
                             
-                            foreach ($consulta as $aux1) {
-                                array_push($temp, $aux1);
-                            }
+                            if (empty($consultaB)) {
+                                foreach ($consultaB as $aux1) {
+                                    array_push($temp, $aux1);
+                                }
+                            }else{
+                                foreach ($consultaA as $aux1) {
+                                    array_push($temp, $aux1);
+                                }
+                            }     
+                            
 
                             
                             
@@ -369,18 +385,17 @@ class EntelController extends Controller
 
                 }
             }
-
+            
             $nuevo = [];
             $cant = 0;
 
             for ($i=0; $i < count($lista); $i++) { 
                 $temp = [];
-                for ($j=0; $j < count($lista[$i])-1; $j++) { 
-                    
+                for ($j=0; $j <  count($lista[$i])-1; $j++) { 
                     $a = $j+1;
                     if (($lista[$i][$j]->tiempo == $lista[$i][$a]->tiempo || $lista[$i][$j]->fecha == $lista[$i][$a]->fecha) && $lista[$i][$j]->llamada == "ENTRANTE") {
                         
-                        if ($lista[$i][$j]->radio_baseB == '-') {
+                        if ($lista[$i][$j]->radio_baseB == '-' ) {
                             $lista[$i][$j]->radio_baseB = $lista[$i][$a]->radio_baseB;
                             $lista[$i][$j]->coordenadaB = $lista[$i][$a]->coordenadaB;
                         } else {
@@ -416,9 +431,15 @@ class EntelController extends Controller
                     
                 }
                 $cant = $cant+1;
-                array_push($nuevo, $temp);
-               
+                if (sizeof($lista[0])== 1) {
+                    array_push($nuevo, $lista[0]);
+                }else{
+                    array_push($nuevo, $temp);
+                }
+                
             }
+            
+           
 
         return view('entel.fecha', compact('nuevo','cant','registro','filtrado'));
     }
@@ -1132,4 +1153,74 @@ class EntelController extends Controller
 
    }
 
+
+   public function printTotal(entel $entel ){
+
+            $vertical = DB::table('entels')             //contar arreglo con count($vertical)
+                            ->select('numero_usuario')
+                            ->get();
+
+            $horizontal = DB::table('excels')           //contar arreglo con count($horizontal)
+                            ->select('identificador')
+                            ->groupBy('identificador')
+                            ->get();
+
+            $Matriz[0][0] = 0;
+
+            for ($i=1; $i < count($vertical)+1 ; $i++) { 
+                for ($j=0; $j < count($horizontal)+1 ; $j++) { 
+
+                    if ($j==0) {
+                        $Matriz[$i][0] = $vertical[$i-1]->numero_usuario;
+                    }else{
+                        $Matriz[$i][$j]=0;
+                    }
+                   
+                }
+            }
+
+
+            for ($i=0; $i < count($horizontal) ; $i++) { 
+                $Matriz[0][$i+1] = $horizontal[$i]->identificador;
+            }
+
+
+            for ($i=1; $i < count($vertical)+1 ; $i++) { 
+                for ($j=1; $j < count($horizontal)+1 ; $j++) { 
+
+                    $consulta = DB::table('excels')
+                                ->select('*')
+                                ->where('identificador','=',$Matriz[0][$j])
+                                ->orWhere('numeroA','=',$Matriz[$i][0])
+                                ->orWhere('numeroB','=',$Matriz[$i][0])
+                                ->exists();
+
+                    if($consulta){
+
+                        $aux1 = DB::table('excels')
+                                ->select('numeroA')
+                                ->where('identificador','=',$Matriz[0][$j])
+                                ->Where('numeroA','=',$Matriz[$i][0])
+                                ->count();
+
+                                
+                        $aux2 = DB::table('excels')
+                                ->select('numeroB')
+                                ->where('identificador','=',$Matriz[0][$j])
+                                ->Where('numeroB','=',$Matriz[$i][0])
+                                ->count();
+
+                        $Matriz[$i][$j] = $aux1+$aux2;
+                    }else{
+                        $Matriz[$i][$j] = 0;
+                    }
+                }
+             
+            }
+            $v = count($vertical)+1;
+            $h= count($horizontal)+1;
+
+
+            dd($Matriz);
+   }
 }
