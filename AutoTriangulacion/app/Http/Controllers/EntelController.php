@@ -312,7 +312,7 @@ class EntelController extends Controller
             foreach ($fecha as $fecha) {
                 array_push($nuevo, $fecha);
             }
-
+            
             return view('entel.informe',compact('nuevo','registro','filtrado'));
 
     }
