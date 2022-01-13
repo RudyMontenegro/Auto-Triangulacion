@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\excelModel;
 use App\tigo;
+use App\tigoExcel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel as Ex;
@@ -99,40 +100,19 @@ class TigoController extends Controller
     {
         //
     }
-    public function subirExcel(Request $request)
+
+    public function excel(tigo $viva)
     {
-        try {
-            if ($request->hasFile('archivos')){
+        return view('tigo.excel');
+    }
 
-            $archivos = request('archivos');
-            $numero = request('numero');
-            $file = $request->file('archivos');
-            for ($i=0; $i < sizeOf($archivos); $i++) { 
-                
-
-                $existe = DB::table('excels')
-                            ->select('*')
-                            ->where('identificador', $numero[$i])
-                            ->exists();
-
-                if (!$existe) {
-                    Ex::import(new excelModel,$file[$i]);
-
-                    DB::table('excels')
-                    ->where('identificador', null)
-                    ->update(['identificador' => $numero[$i]]);
-                }
-                
-                
-                
-            }
-            
-
-            $vertical = DB::table('entels')             //contar arreglo con count($vertical)
+    public function mostrarTabla(tigo $tigo)
+    {
+        $vertical = DB::table('tigos')             //contar arreglo con count($vertical)
                             ->select('numero_usuario')
                             ->get();
 
-            $horizontal = DB::table('excels')           //contar arreglo con count($horizontal)
+            $horizontal = DB::table('tigo_excels')           //contar arreglo con count($horizontal)
                             ->select('identificador')
                             ->groupBy('identificador')
                             ->get();
@@ -172,7 +152,7 @@ class TigoController extends Controller
             for ($i=1; $i < count($vertical)+1 ; $i++) { 
                 for ($j=1; $j < count($horizontal)+1 ; $j++) { 
 
-                    $consulta = DB::table('excels')
+                    $consulta = DB::table('tigo_excels')
                                 ->select('*')
                                 ->where('identificador','=',$Matriz[0][$j])
                                 ->orWhere('numeroA','=',$Matriz[$i][0])
@@ -181,14 +161,123 @@ class TigoController extends Controller
 
                     if($consulta){
 
-                        $aux1 = DB::table('excels')
+                        $aux1 = DB::table('tigo_excels')
                                 ->select('numeroA')
                                 ->where('identificador','=',$Matriz[0][$j])
                                 ->Where('numeroA','=',$Matriz[$i][0])
                                 ->count();
 
                                 
-                        $aux2 = DB::table('excels')
+                        $aux2 = DB::table('tigo_excels')
+                                ->select('numeroB')
+                                ->where('identificador','=',$Matriz[0][$j])
+                                ->Where('numeroB','=',$Matriz[$i][0])
+                                ->count();
+
+                        $Matriz[$i][$j] = $aux1+$aux2;
+                    }else{
+                        $Matriz[$i][$j] = 0;
+                    }
+                }
+             
+            }
+            $v = count($vertical)+1;
+            $h= count($horizontal)+1;
+
+          
+            return view('tigo.view',compact('Matriz','v','h'));
+    }
+
+    public function subirExcel(Request $request)
+    {
+        try {
+            if ($request->hasFile('archivos')){
+
+            $archivos = request('archivos');
+            $numero = request('numero');
+            $file = $request->file('archivos');
+            for ($i=0; $i < sizeOf($archivos); $i++) { 
+                
+
+                $existe = DB::table('tigos')
+                            ->select('*')
+                            ->where('identificador', $numero[$i])
+                            ->exists();
+
+                if (!$existe) {
+                    Ex::import(new tigoExcel,$file[$i]);
+
+                    DB::table('tigos')
+                    ->where('identificador', null)
+                    ->update(['identificador' => $numero[$i]]);
+                }
+                
+                
+                
+            }
+            
+
+            $vertical = DB::table('tigos')             //contar arreglo con count($vertical)
+                            ->select('numero_usuario')
+                            ->get();
+
+            $horizontal = DB::table('tigo_excels')           //contar arreglo con count($horizontal)
+                            ->select('identificador')
+                            ->groupBy('identificador')
+                            ->get();
+
+            $Matriz[0][0] = 0;
+
+            for ($i=1; $i < count($vertical)+1 ; $i++) { 
+                for ($j=0; $j < count($horizontal)+1 ; $j++) { 
+
+                    if ($j==0) {
+                        $Matriz[$i][0] = $vertical[$i-1]->numero_usuario;
+                    }else{
+                        $Matriz[$i][$j]=0;
+                    }
+                   
+                }
+            }
+
+
+            for ($i=0; $i < count($horizontal) ; $i++) { 
+                $Matriz[0][$i+1] = $horizontal[$i]->identificador;
+            }
+
+            /*
+            for ($i=0; $i < count($vertical)+1 ; $i++) { 
+                for ($j=1; $j < count($horizontal)+1 ; $j++) { 
+
+                    if ($i==0) {
+                        $Matriz[0][$j] = $horizontal[$j-1]->identificador;
+                    }else{
+                        $Matriz[$i][$j]=0;
+                    }
+                   
+                }
+            }*/
+
+            for ($i=1; $i < count($vertical)+1 ; $i++) { 
+                for ($j=1; $j < count($horizontal)+1 ; $j++) { 
+
+                    $consulta = DB::table('tigo_excels')
+                                ->select('*')
+                                ->where('identificador','=',$Matriz[0][$j])
+                                ->orWhere('numeroA','=',$Matriz[$i][0])
+                                ->orWhere('numeroB','=',$Matriz[$i][0])
+                                ->exists();
+
+                    if($consulta){
+
+                        $aux1 = DB::table('tigo_excels')
+                                ->select('numeroA')
+                                ->where('identificador','=',$Matriz[0][$j])
+                                ->Where('numeroA','=',$Matriz[$i][0])
+                                ->count();
+
+                                
+                        $aux2 = DB::table('tigo_excels')
                                 ->select('numeroB')
                                 ->where('identificador','=',$Matriz[0][$j])
                                 ->Where('numeroB','=',$Matriz[$i][0])
@@ -207,7 +296,7 @@ class TigoController extends Controller
             $h= count($horizontal)+1;
 
           
-            return view('entel.view',compact('Matriz','v','h'));
+            return view('tigo.view',compact('Matriz','v','h'));
         }
         } catch (\Throwable $th) {
 

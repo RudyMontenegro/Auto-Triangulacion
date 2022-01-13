@@ -20,10 +20,8 @@ class CreateTigoExcelsTable extends Migration
             $table->string('numeroB')->nullable();
             $table->string('fecha')->nullable();
             $table->string('tiempo')->nullable();
-            $table->string('imei')->nullable();
             $table->string('ciudad')->nullable();
             $table->string('sitio')->nullable();
-            $table->string('cod_ruta')->nullable();
             $table->string('longitud')->nullable();
             $table->string('latitud')->nullable();
             $table->string('punto_cardinal')->nullable();

@@ -568,6 +568,7 @@ class EntelController extends Controller
         return view('entel.informe',compact('nuevo','registro'));
     }
     
+    
     public function mostrarTabla(entel $viva)
     {
         $vertical = DB::table('entels')             //contar arreglo con count($vertical)
@@ -649,7 +650,6 @@ class EntelController extends Controller
           
             return view('entel.view',compact('Matriz','v','h'));
     }
-    
     public function subirExcel(Request $request)
     {
         try {
@@ -1115,7 +1115,7 @@ class EntelController extends Controller
                 $image = file_get_contents('http://maps.googleapis.com/maps/api/staticmap?key=AIzaSyD3T_I3XRvnKbXL4ppS9boJpphoyh0igiw&center='
                 . $sLat. ",". $sLong
                 . '&maptype=hybrid'
-                .'&zoom=4&size=600x400'
+                .'&zoom=14&size=600x400'
                 .'&markers=size:tiny|color:red|'
                 . $sLat. ",". $sLong);
 
