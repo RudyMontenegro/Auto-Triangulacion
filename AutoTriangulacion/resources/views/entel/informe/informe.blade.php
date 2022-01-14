@@ -1,7 +1,8 @@
 <div>
     <h5 class="text-align-center text-center">INFORME DE NUMEROS TELEFONICOS INVOLUCRADOS</h5>
-    <br>
+    <br><h1>naushfjhahf</h1>
         @for ($i = 0; $i < $cant; $i++)
+        
             @for ($j = 0; $j < count($nuevo[$i]) ; $j++)
                     <?php $a = substr($nuevo[$i][$j]->fecha, 0, -9);
                         $b = substr($nuevo[$i][$j]->fecha, 10);
@@ -56,15 +57,24 @@
                     </h6></li></ul>
                 @else
                 <ul style= "list-style-type: square;"><li>
-                <h6 align = "justify">EN FECHA {{$a}} a horas {{$b}} el usuario del número {{$nuevo[$i][$j]->numeroA}} @if ($nombreA != 'vacio')registrado a nombre de {{$nombreA}}, @else con datos de usuario desconocido @endif 
-                <b>intenta</b> tomar contacto (llamada perdida),  @if ($nuevo[$i][$j]->radio_baseA != '-')
-                empleando la radio base {{$nuevo[$i][$j]->radio_baseA}}, @else empleando una radio base DESCONOCIDA, @endif al número {{$nuevo[$i][$j]->numeroB}} 
-                @if ($nombreB != 'vacio')registrado a nombre de {{$nombreB}}, @else con datos de usuario desconocido @endif , @if ($nuevo[$i][$j]->radio_baseB == '-')
-                para este último empleó una radio base DESCONOCIDA.@else para este último empleó una radio base {{$nuevo[$i][$j]->radio_baseB}}.@endif
-            </h6></li></ul>
+                    <h6 align = "justify">EN FECHA {{$a}} a horas {{$b}} el usuario del número {{$nuevo[$i][$j]->numeroA}} @if ($nombreA != 'vacio')registrado a nombre de {{$nombreA}}, @else con datos de usuario desconocido @endif 
+                       <b>intenta</b> tomar contacto (llamada perdida),  @if ($nuevo[$i][$j]->radio_baseA != '-')
+                         empleando la radio base {{$nuevo[$i][$j]->radio_baseA}}, @else empleando una radio base DESCONOCIDA, @endif al número {{$nuevo[$i][$j]->numeroB}} 
+                       @if ($nombreB != 'vacio')registrado a nombre de {{$nombreB}}, @else con datos de usuario desconocido @endif , @if ($nuevo[$i][$j]->radio_baseB == '-')
+                       para este último empleó una radio base DESCONOCIDA.@else para este último empleó una radio base {{$nuevo[$i][$j]->radio_baseB}}.@endif
+                    </h6></li></ul>
+
                     
-                @endif
+                    
+                 @endif
+                  @if($j % 7 == 0 && $j !=0)
+                   <div style="page-break-after:always;"></div>
+                  @endif
             @endfor
             <br>
+            @if($i % 7 == 0 && $i !=0)
+                   <div style="page-break-after:always;"></div>
+                  @endif
+           
     @endfor
 </div>
