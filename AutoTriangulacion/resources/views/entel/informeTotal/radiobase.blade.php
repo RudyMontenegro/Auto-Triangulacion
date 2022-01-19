@@ -17,8 +17,10 @@
                             
                     </tbody>
             </table>
-
-                <img src="{{ public_path('/PDF2/'.$i.'.jpg') }}" width="900px">
+                <center>
+                    <img src="{{ public_path('/PDF2/'.$i.'.jpg') }}" width="900px">
+                </center>
+                
                  <div style="page-break-after:always;"></div>
 
 @endfor

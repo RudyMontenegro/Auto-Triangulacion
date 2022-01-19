@@ -63,11 +63,11 @@
 
     <div style="page-break-after:always;"></div> 
 
-    @include('entel.informe.informe')
+    @include('entel.informeTotal.informe')
 
     <div style="page-break-after:always;"></div> 
 
-    @include('entel.informe.radiobase')
+    @include('entel.informeTotal.radiobase')
 
 </body>
 </html>

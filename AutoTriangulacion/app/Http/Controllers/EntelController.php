@@ -1126,7 +1126,7 @@ class EntelController extends Controller
         
         //imprimir mapa
 
-       set_time_limit(300); 
+       set_time_limit(500); 
        
        $contador = 0;
        for ($i=0; $i < count($coordenadas); $i++) { 
@@ -1157,7 +1157,7 @@ class EntelController extends Controller
 
    }
 
-
+ 
    public function printTotal(entel $entel ){
 
             $vertical = DB::table('entels')             //contar arreglo con count($vertical)
