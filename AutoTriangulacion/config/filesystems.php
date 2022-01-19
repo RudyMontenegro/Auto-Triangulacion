@@ -71,6 +71,13 @@ return [
             'visibility' => 'public',
         ],
 
+        'print2' => [
+            'driver' => 'local',
+            'root' => public_path().'/PDF2',
+            'url' => env('APP_URL').'/public',
+            'visibility' => 'public',
+        ],
+
     ],
 
 ];

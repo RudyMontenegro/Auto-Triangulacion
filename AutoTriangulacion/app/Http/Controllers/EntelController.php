@@ -428,11 +428,14 @@ class EntelController extends Controller
                     
                 }
                 $cant = $cant+1;
-                if (sizeof($lista[0])== 1) {
-                    array_push($nuevo, $lista[0]);
+                
+                if (sizeof($lista[$i])== 1) {
+                    array_push($nuevo, $lista[$i]);
                 }else{
                     array_push($nuevo, $temp);
                 }
+               
+                
                 
             }
             
@@ -1005,7 +1008,7 @@ class EntelController extends Controller
 
                 }
             }
-
+            
             $coordenadas = [];
             $nuevo = [];
             $cant = 0;
@@ -1069,7 +1072,11 @@ class EntelController extends Controller
                     
                 }
                 $cant = $cant+1;
-                array_push($nuevo, $temp);
+                if (sizeof($lista[$i])== 1) {
+                    array_push($nuevo, $lista[$i]);
+                }else{
+                    array_push($nuevo, $temp);
+                }
                
             }
         
@@ -1218,6 +1225,189 @@ class EntelController extends Controller
             $h= count($horizontal)+1;
 
 
-            dd($Matriz);
+            //IMPRIMIR INFORME
+
+            
+        $lista = [];
+            
+
+        for ($i=1; $i < count($vertical)+1 ; $i++) { 
+            
+            for ($j=1; $j < count($horizontal)+1 ; $j++) { 
+
+                
+                $temp = [];  
+                if ($Matriz[$i][$j] >= 1) {
+                   
+
+                        $consulta = DB::table('excels')
+                                ->select('*')
+                                ->where('identificador','=',$Matriz[0][$j])
+                                ->where('tiempo', '<>' ,'-')
+                                ->get();
+                                
+                        
+                        foreach ($consulta as $aux1) {
+
+                            if ($aux1->numeroA == $Matriz[$i][0] || $aux1->numeroB == $Matriz[$i][0]) {
+                                array_push($temp, $aux1);
+                            }
+                            
+                        }
+
+                        
+                        array_push($lista, $temp);
+                    
+                }
+
+            }
+        }
+
+        $coordenadas = [];
+            $nuevo = [];
+            $cant = 0;
+
+            for ($i=0; $i < count($lista); $i++) { 
+                $temp = [];
+                $aux = [];
+                for ($j=0; $j < count($lista[$i])-1; $j++) { 
+                    
+                
+                        $a = $j+1;
+                        if (($lista[$i][$j]->tiempo == $lista[$i][$a]->tiempo || $lista[$i][$j]->fecha == $lista[$i][$a]->fecha) && $lista[$i][$j]->llamada == "ENTRANTE") {
+                            
+                            if ($lista[$i][$j]->radio_baseB == '-') {
+                                $lista[$i][$j]->radio_baseB = $lista[$i][$a]->radio_baseB;
+                                $lista[$i][$j]->coordenadaB = $lista[$i][$a]->coordenadaB;
+                            } else {
+                                $lista[$i][$j]->radio_baseA = $lista[$i][$a]->radio_baseA;
+                                $lista[$i][$j]->coordenadaA = $lista[$i][$a]->coordenadaA;
+                            }
+                            
+                            //unset($lista[$i][$a]); 
+                            array_push($temp, $lista[$i][$j]);
+                            
+                            $j = $j+1;
+
+                            if (!in_array($lista[$i][$j]->coordenadaA, $coordenadas) ) {
+                                array_push($coordenadas, $lista[$i][$j]->coordenadaA);
+                            }
+                            if (!in_array($lista[$i][$j]->coordenadaB, $coordenadas)) {
+                                array_push($coordenadas, $lista[$i][$j]->coordenadaB);
+                            }
+                        
+
+                        } else {
+                            if (($lista[$i][$j]->tiempo == $lista[$i][$a]->tiempo || $lista[$i][$j]->fecha == $lista[$i][$a]->fecha) && $lista[$i][$j]->llamada == "SALIENTE") {
+                            
+                                if ($lista[$i][$j]->radio_baseB == '-') {
+                                    $lista[$i][$j]->radio_baseB = $lista[$i][$a]->radio_baseB;
+                                    $lista[$i][$j]->coordenadaB = $lista[$i][$a]->coordenadaB;
+                                } else {
+                                    $lista[$i][$j]->radio_baseA = $lista[$i][$a]->radio_baseA;
+                                    $lista[$i][$j]->coordenadaA = $lista[$i][$a]->coordenadaA;
+                                }
+                                
+                                //unset($lista[$i][$a]); 
+                                array_push($temp, $lista[$i][$j]);
+                                $j = $j+1;
+
+                                if (!in_array($lista[$i][$j]->coordenadaA, $coordenadas) ) {
+                                    array_push($coordenadas, $lista[$i][$j]->coordenadaA);
+                                }
+                                if (!in_array($lista[$i][$j]->coordenadaB, $coordenadas)) {
+                                    array_push($coordenadas, $lista[$i][$j]->coordenadaB);
+                                }
+                                
+                            } else {
+                                    array_push($temp, $lista[$i][$j]);
+                            }
+                            
+                        }
+                    
+                }
+                $cant = $cant+1;
+
+                if (sizeof($lista[$i])== 1) {
+                    array_push($nuevo, $lista[$i]);
+                }else{
+                    array_push($nuevo, $temp);
+                }
+               
+            }
+
+            
+            //OBTENCION DE NOMBRES DE RADIOS BASES
+        $radioBase = [];
+        
+        foreach ($coordenadas as $coordenadass) {
+            if ($coordenadass != '-') {
+
+                $lista = DB::table('excels')
+                        ->select('*')
+                        ->get();
+                $coor = [];
+                foreach ($lista as $lista) {
+                    
+                    if ($lista->coordenadaA == $coordenadass) {
+                        array_push( $coor, $lista->radio_baseA);
+                        array_push($coor, $coordenadass);
+                        
+                    }else{
+                        if ($lista->coordenadaB == $coordenadass) {
+                            array_push($coor, $lista->radio_baseB);
+                            array_push($coor, $coordenadass);
+                            
+                        }
+                    }
+                }
+
+                $vacio = [];
+                $coor = array_unique($coor);
+                foreach ($coor as $coors) {
+                    $a = substr($coors, 0, 1);
+                    if ($a == '-') {
+                        array_unshift($vacio, $coors);
+                    }else{
+                        array_push($vacio, $coors);
+                    }
+                    
+                }
+                
+                array_push($radioBase, $vacio);
+            }
+        }    
+
+        //imprimir mapa
+
+       set_time_limit(500); 
+       
+       $contador = 0;
+       for ($i=0; $i < count($coordenadas); $i++) { 
+            if ($coordenadas[$i] != '-') {
+                $pos = strpos($coordenadas[$i], ',');
+                $a = substr($coordenadas[$i], 0, $pos);
+                $b = substr($coordenadas[$i], $pos+1);
+                
+                $sLat = $a;
+                $sLong = $b;
+                $image = file_get_contents('http://maps.googleapis.com/maps/api/staticmap?key=AIzaSyD3T_I3XRvnKbXL4ppS9boJpphoyh0igiw&center='
+                . $sLat. ",". $sLong
+                . '&maptype=hybrid'
+                .'&zoom=14&size=600x400'
+                .'&markers=size:tiny|color:red|'
+                . $sLat. ",". $sLong);
+
+                
+                Storage::disk('print2')->put($contador.'.jpg', $image);
+                $contador = $contador+1;
+            }
+       }
+
+
+       $pdf = \PDF::loadView('entel.pdfTotal',compact('Matriz', 'v' , 'h','nuevo','cant','coor','contador','registro','radioBase'));
+   
+        return $pdf->setPaper('a4', 'landscape')
+                   ->stream('entel.pdf');
    }
 }
