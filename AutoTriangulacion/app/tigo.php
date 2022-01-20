@@ -2,11 +2,25 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use Maatwebsite\Excel\Concerns\ToModel;
 
-class tigo extends Model
+class tigo implements ToModel
 {
-    protected $fillable = [
-        'llamada','numeroA', 'numeroB','fecha','tiempo','ciudad','sitio', 'longitud', 'latitud', 'punto_cardinal',
-    ];
+    public function model(array $row)
+    {
+    
+        return new tigoExcel([
+            'llamada' => $row[0],
+            'numeroA' => $row[1],
+            'numeroB' => $row[2],
+            'fecha' => $row[3],
+            'tiempo' => $row[4],
+            'ciudad' => $row[6],
+            'sitio' => $row[7],
+            'longitud' => $row[9],
+            'latitud' => $row[10],
+            'punto_cardinal' =>$row[11],
+            
+        ]);
+    }
 }

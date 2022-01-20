@@ -7,7 +7,7 @@ use App\tigo;
 use App\tigoExcel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Facades\Excel as Ex;
+use Maatwebsite\Excel\Facades\Excel as Exx;
 
 class TigoController extends Controller
 {
@@ -191,23 +191,24 @@ class TigoController extends Controller
     public function subirExcel(Request $request)
     {
         try {
+            
             if ($request->hasFile('archivos')){
 
             $archivos = request('archivos');
             $numero = request('numero');
             $file = $request->file('archivos');
+            
             for ($i=0; $i < sizeOf($archivos); $i++) { 
                 
-
-                $existe = DB::table('tigos')
+                $existe = DB::table('tigo_excels')
                             ->select('*')
                             ->where('identificador', $numero[$i])
                             ->exists();
-
+                            
                 if (!$existe) {
-                    Ex::import(new tigoExcel,$file[$i]);
-
-                    DB::table('tigos')
+                    
+                    Exx::import(new tigo , $file[$i]);
+                    DB::table('tigo_excels')
                     ->where('identificador', null)
                     ->update(['identificador' => $numero[$i]]);
                 }
