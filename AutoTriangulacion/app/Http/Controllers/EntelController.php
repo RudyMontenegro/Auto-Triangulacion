@@ -1380,7 +1380,7 @@ class EntelController extends Controller
 
         //imprimir mapa
 
-       set_time_limit(500); 
+       set_time_limit(1000); 
        
        $contador = 0;
        for ($i=0; $i < count($coordenadas); $i++) { 
@@ -1405,7 +1405,7 @@ class EntelController extends Controller
        }
 
 
-       $pdf = \PDF::loadView('entel.pdfTotal',compact('Matriz', 'v' , 'h','nuevo','cant','coor','contador','registro','radioBase'));
+       $pdf = \PDF::loadView('entel.pdfTotal',compact('Matriz', 'v' , 'h','nuevo','cant','coor','contador','radioBase'));
    
         return $pdf->setPaper('a4', 'landscape')
                    ->stream('entel.pdf');
