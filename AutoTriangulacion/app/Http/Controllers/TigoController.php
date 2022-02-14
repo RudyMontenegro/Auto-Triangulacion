@@ -44,13 +44,14 @@ class TigoController extends Controller
             $nombre = request('nombre');
             $ci = request('ci');
 
-            for($i=0; $i < sizeof($nombre); $i++){
-                $tigo = new tigo();
-                $tigo -> numero_usuario = $numero_usuario[$i];
-                $tigo -> nombre = $nombre[$i];
-                $tigo -> ci = $ci[$i];
 
-                $tigo -> save();
+            for($i=0; $i < sizeof($nombre); $i++){
+
+                DB::table('tigos')->insert([
+                    'numero_usuario' =>$numero_usuario[$i],
+                    'nombre' => $nombre[$i],
+                    'ci' => $ci[$i]
+                ]);
             }
         }
         return view('tigo.excel');
@@ -307,4 +308,179 @@ class TigoController extends Controller
         
         
     }
+
+    public function informeRegistro(){
+        $registro = DB::table('tigo_excels')             
+                        ->select('identificador')
+                        ->distinct()
+                        ->get();
+                        
+        $lista = [];
+
+        foreach ($registro as $registro) {
+            $temp = [];
+            $nombre = DB::table('tigos')             
+                    ->select('nombre')
+                    ->where('numero_usuario','=',$registro->identificador)
+                    ->exists(); 
+                    
+            if ($nombre) {
+                $nombres = DB::table('tigos')             
+                    ->select('nombre')
+                    ->where('numero_usuario','=',$registro->identificador)
+                    ->first();
+                    
+                    $datos = [
+                        "nombre" => $nombres,
+                        "identificador" => $registro->identificador,
+                    ];
+                    
+            }else{
+
+                $datos = [
+                    'nombre' => "vacio",
+                    'identificador' => $registro->identificador,
+                ];
+
+            }
+            array_push($lista, $datos);
+
+        }     
+        
+        //dd($lista);
+        return view('tigo.registro', compact('lista'));
+    }
+
+
+    public function informeCoincidencia(tigo $viva, $registro)
+    {
+            $vertical = DB::table('tigos')             //contar arreglo con count($vertical)
+                        ->select('numero_usuario')
+                        ->get();
+
+            $horizontal = DB::table('tigo_excels')           //contar arreglo con count($horizontal)
+                        ->select('identificador')
+                        ->groupBy('identificador')
+                        ->get();
+
+            $Matriz = new tigoExcel();
+            $Matriz = $Matriz->matriz();
+
+            $temp = [];
+            
+
+            for ($i=1; $i < count($vertical)+1 ; $i++) { 
+                
+                for ($j=0; $j < count($horizontal)+1 ; $j++) { 
+ 
+
+                    if ($Matriz[0][$j] == $registro && $Matriz[$i][$j] == 1 ) {
+                      
+                            $consulta = $Matriz[$i][0];
+                                array_push($temp, $consulta);
+                    }
+                       
+
+                }
+            }
+            
+            
+            $lista = [];
+
+            foreach ($temp as $registros) {
+                $nombre = DB::table('tigos')             
+                        ->select('nombre')
+                        ->where('numero_usuario','=',$registros)
+                        ->exists(); 
+                        
+                if ($nombre) {
+                    $nombres = DB::table('tigos')             
+                        ->select('nombre')
+                        ->where('numero_usuario','=',$registros)
+                        ->first();
+                        
+                        $datos = [
+                            "nombre" => $nombres->nombre,
+                            "identificador" => $registros,
+                        ];
+                        
+                }else{
+    
+                    $datos = [
+                        'nombre' => "vacio",
+                        'identificador' => $registros,
+                    ];
+    
+                }
+                array_push($lista, $datos);
+    
+            }  
+
+            return view('tigo.filtrado', compact('lista','registro'));
+
+           
+
+    }
+
+
+    public function informeFiltrado(tigo $viva, $registro, $filtrado)
+    {
+        
+        $vertical = DB::table('tigos')             //contar arreglo con count($vertical)
+                        ->select('numero_usuario')
+                        ->get();
+
+            $horizontal = DB::table('tigo_excels')           //contar arreglo con count($horizontal)
+                        ->select('identificador')
+                        ->groupBy('identificador')
+                        ->get();
+
+            $Matriz = new tigoExcel();
+            $Matriz = $Matriz->matriz();
+
+            $lista = [];
+            
+
+            for ($i=1; $i < count($vertical)+1 ; $i++) { 
+                
+                for ($j=0; $j < count($horizontal)+1 ; $j++) { 
+
+
+                    if ($Matriz[0][$j] == $registro && $Matriz[$i][$j] == 1 ) {
+                      
+                            
+                             $consulta = DB::table('tigo_excels')
+                                    ->select('*')
+                                    ->where('identificador','=',$registro)
+                                    ->get();
+                                  
+
+                      
+                            foreach ($consulta as $aux) {
+                                if ($aux->numeroA == $filtrado || $aux->numeroB == $filtrado) {
+                                    array_push($lista, $aux->fecha);
+                                } 
+                            }
+
+                        }
+                }
+            }
+            
+            $fecha = [];
+
+            foreach ($lista as $fechas) {
+                array_push($fecha, substr($fechas, 0, -9));
+            }
+    
+            $fecha = array_unique($fecha);
+    
+            $nuevo = [];
+            foreach ($fecha as $fecha) {
+                array_push($nuevo, $fecha);
+            }
+            
+            return view('tigo.informe',compact('nuevo','registro','filtrado'));
+
+    }
+
 }

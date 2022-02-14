@@ -77,7 +77,9 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('tigo/register/XLSX/view', ['as' => 'entel.mostrarTabla', 'uses' => 'TigoController@mostrarTabla']);
 	Route::get('tigo/register',['as' => 'tigo.create','uses' => 'TigoController@create']);
 	Route::post('tigo/register/XLSX',['as' => 'tigo.store','uses' => 'TigoController@store']);
-	
+	Route::get('tigo/informe/registro', ['as' => 'tigo.informeRegistro', 'uses' => 'TigoController@informeRegistro']);
+	Route::get('tigo/informe/registro/{registro}', ['as' => 'tigo.informeCoincidencia', 'uses' => 'TigoController@informeCoincidencia']);
+	Route::get('tigo/informe/registro/{registro}/{filtrado}', ['as' => 'tigo.informefiltrado', 'uses' => 'TigoController@informefiltrado']);
 });
 
 

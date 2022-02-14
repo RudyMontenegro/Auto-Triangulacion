@@ -60,7 +60,7 @@
                   
                   </div>
 
-                  <a href="{{ url('') }}" class="btn btn-sm btn-success float-right">Siguiente</a>
+                  <a href="{{ url('tigo/informe/registro') }}" class="btn btn-sm btn-success float-right">Siguiente</a>
               </div>
             </div>
           </div>

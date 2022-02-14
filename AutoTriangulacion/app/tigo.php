@@ -8,7 +8,6 @@ class tigo implements ToModel
 {
     public function model(array $row)
     {
-    
         return new tigoExcel([
             'llamada' => $row[0],
             'numeroA' => $row[1],
